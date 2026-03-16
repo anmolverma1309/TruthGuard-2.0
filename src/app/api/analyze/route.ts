@@ -52,33 +52,25 @@ Text:
 ${input}
 """`;
 
-    const models = [
-      "google/gemma-3-12b-it:free",
-      "google/gemma-3n-e2b-it:free"
-    ];
-
-    let aiResult = null;
-    let lastError = null;
-
-    for (const model of models) {
-      try {
-        console.log(`Attempting detection with model: ${model}`);
-        const response = await axios.post(
-          'https://openrouter.ai/api/v1/chat/completions',
-          {
-            model: model,
-            messages: [{ role: "user", content: prompt }],
-            temperature: 0.1
-          },
-          {
-            headers: {
-              'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-              'HTTP-Referer': 'http://localhost:3000',
-              'X-Title': 'TruthGuard X',
-              'Content-Type': 'application/json'
-            }
+    let aiResult;
+    try {
+      const response = await axios.post(
+        'https://openrouter.ai/api/v1/chat/completions',
+        {
+          model: "google/gemma-3n-e2b-it:free",
+          // Removed response_format as it causes 400/404 on this specific model
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.1
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+            'HTTP-Referer': 'http://localhost:3000',
+            'X-Title': 'TruthGuard X',
+            'Content-Type': 'application/json'
           }
-        );
+        }
+      );
 
         const content = response.data.choices[0].message.content;
 
