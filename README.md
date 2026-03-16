@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧠 AI Misinformation Detector
 
-## Getting Started
+An AI-powered tool that detects **fake news and misinformation in real time**.
+This project analyzes text using AI and provides a **credibility score** to help users identify whether the information is trustworthy or potentially misleading.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* 🔎 **Real-time misinformation detection**
+* 🤖 **AI-powered text analysis**
+* 📊 **Credibility score (0–100)**
+* 🌐 **Clean and modern UI**
+* ⚡ **Fast response**
+* 🧠 Designed for **Gen Z and general users**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧩 How It Works
 
-## Learn More
+1. User enters a **statement or news text**.
+2. The AI model analyzes the content.
+3. The system compares it with known patterns of misinformation.
+4. A **credibility score** is generated.
+5. The tool shows whether the content is **likely true, suspicious, or misleading**.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠 Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* **Frontend:** HTML, CSS, JavaScript
+* **Backend:** Go / Python
+* **AI:** NLP-based analysis
+* **API Integration:** Real-time search and validation
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📸 Demo
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Example:
+
+Input:
+Bihar is in India.
+
+Output:
+Credibility Score: **100 / 100**
+Result: **True information**
+
+---
+
+## 🎯 Purpose
+
+Misinformation spreads quickly on the internet.
+This tool helps people **verify information before believing or sharing it**.
+
+The goal is to make **fact-checking simple and accessible for everyone.**
+
+---
+
+## ⚠️ Disclaimer
+
+This tool provides an **AI-generated credibility estimate** and should not be considered a perfect fact-checking system. Always verify important information using trusted sources.
+
+---
+
+## 📌 Future Improvements
+
+* Real-time news verification
+* Browser extension
+* Image misinformation detection
+* Social media integration
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+Feel free to open issues or submit pull requests to improve the project.
+
+---
+
+## ⭐ Support
+
+If you like this project, consider giving it a **star ⭐ on GitHub**.
