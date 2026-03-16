@@ -52,25 +52,34 @@ Text:
 ${input}
 """`;
 
-    let aiResult;
-    try {
-      const response = await axios.post(
-        'https://openrouter.ai/api/v1/chat/completions',
-        {
-          model: "google/gemma-3n-e2b-it:free",
-          // Removed response_format as it causes 400/404 on this specific model
-          messages: [{ role: "user", content: prompt }],
-          temperature: 0.1
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-            'HTTP-Referer': 'http://localhost:3000',
-            'X-Title': 'TruthGuard X',
-            'Content-Type': 'application/json'
+
+    const models = [
+      "google/gemma-3-12b-it:free",
+      "google/gemma-3n-e2b-it:free"
+    ];
+
+    let aiResult = null;
+    let lastError = null;
+
+    for (const model of models) {
+      try {
+        console.log(`Attempting detection with model: ${model}`);
+        const response = await axios.post(
+          'https://openrouter.ai/api/v1/chat/completions',
+          {
+            model: model,
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.1
+          },
+          {
+            headers: {
+              'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+              'HTTP-Referer': 'http://localhost:3000',
+              'X-Title': 'TruthGuard X',
+              'Content-Type': 'application/json'
+            }
           }
-        }
-      );
+        );
 
         const content = response.data.choices[0].message.content;
 
@@ -86,7 +95,7 @@ ${input}
             console.warn("JSON Parse Error on model output:", jsonMatch[0]);
           }
         }
-        
+
         // Fallback if the model completely fails to return valid JSON
         if (!parsed) {
           console.warn(`Model ${model} returned unparseable output. Using fallback generator.`);
@@ -121,7 +130,6 @@ ${input}
     // If ALL models failed, provide a smart local heuristic that mimics a real AI response
     if (!aiResult) {
       console.warn("All fallback OpenRouter models failed. Acting as local heuristic engine.");
-      
       const lowerInput = input.toLowerCase();
       let fallbackScore = 50;
       let fallbackVerdict = "unverifiable";
@@ -129,20 +137,20 @@ ${input}
       let fallbackSubReason = "Further contextual evidence or sources would be required to evaluate this statement.";
 
       if (lowerInput.includes("flat earth") || lowerInput.includes("fake moon landing") || lowerInput.includes("vaccines cause autism") || lowerInput.includes("illusion created by nasa")) {
-         fallbackScore = 15;
-         fallbackVerdict = "fake";
-         fallbackReasoning = "The central premise directly contradicts centuries of established scientific consensus and peer-reviewed observational evidence.";
-         fallbackSubReason = "Claims regarding this topic are universally classified as conspiracy theories and lack empirical backing.";
+        fallbackScore = 15;
+        fallbackVerdict = "fake";
+        fallbackReasoning = "The central premise directly contradicts centuries of established scientific consensus and peer-reviewed observational evidence.";
+        fallbackSubReason = "Claims regarding this topic are universally classified as conspiracy theories and lack empirical backing.";
       } else if (lowerInput.length > 250 && !lowerInput.includes("!") && !lowerInput.includes("SHOCKING")) {
-         fallbackScore = 85;
-         fallbackVerdict = "reliable";
-         fallbackReasoning = "The text maintains a professional, measured tone and provides comprehensive context typical of verified journalistic or academic sources.";
-         fallbackSubReason = "No common misinformation patterns, such as emotional manipulation or sensationalist punctuation, were detected.";
+        fallbackScore = 85;
+        fallbackVerdict = "reliable";
+        fallbackReasoning = "The text maintains a professional, measured tone and provides comprehensive context typical of verified journalistic or academic sources.";
+        fallbackSubReason = "No common misinformation patterns, such as emotional manipulation or sensationalist punctuation, were detected.";
       } else if (lowerInput.includes("!") || lowerInput.includes("?") || lowerInput.includes("truth about") || lowerInput.includes("they don't want you to know")) {
-         fallbackScore = 45;
-         fallbackVerdict = "misleading";
-         fallbackReasoning = "The statement relies heavily on sensationalist language, emotive punctuation, or common clickbait phrasing designed to evoke strong reactions rather than convey facts.";
-         fallbackSubReason = "These structural patterns often indicate that a claim is exaggerated or taken out of context.";
+        fallbackScore = 45;
+        fallbackVerdict = "misleading";
+        fallbackReasoning = "The statement relies heavily on sensationalist language, emotive punctuation, or common clickbait phrasing designed to evoke strong reactions rather than convey facts.";
+        fallbackSubReason = "These structural patterns often indicate that a claim is exaggerated or taken out of context.";
       }
 
       aiResult = {
