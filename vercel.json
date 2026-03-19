@@ -3,6 +3,5 @@
   "devCommand": "npm run dev",
   "installCommand": "npm ci",
   "outputDirectory": ".next",
-  "framework": "nextjs",
-  "nodejs": "20"
+  "framework": "nextjs"
 }
