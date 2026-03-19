@@ -10,6 +10,7 @@ interface Source {
     name: string;
     status: "contradicts" | "no-evidence" | "verified";
     url: string;
+    score?: number;
 }
 
 interface AnalysisResult {
@@ -113,7 +114,7 @@ function ResultsContent() {
                         <div className="absolute top-0 right-0 w-32 h-32 bg-cyber-red/10 rounded-full blur-[50px] pointer-events-none" />
                         <h2 className="text-lg font-bold mb-6 font-mono border-b border-cyber-panel-border pb-2">Credibility Score</h2>
                         <div className="flex justify-center my-8">
-                            <GaugeChart score={result.score} />
+                            <GaugeChart score={result.score} status={result.status} />
                         </div>
 
                         <div className="mt-8 space-y-3">
@@ -145,7 +146,12 @@ function ResultsContent() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                             {result.sources?.map((source, idx) => (
                                 <div key={idx} className="p-4 rounded-lg bg-cyber-bg border border-cyber-panel-border flex flex-col items-center text-center">
-                                    <span className="font-bold text-white mb-2">{source.name}</span>
+                                    <span className="font-bold text-white mb-1">{source.name}</span>
+                                    {source.score !== undefined && (
+                                        <div className="text-[10px] font-mono text-cyber-text-secondary mb-2 uppercase tracking-tighter">
+                                            Source Score: <span className={source.score >= 80 ? "text-cyber-green" : source.score >= 50 ? "text-cyber-amber" : "text-cyber-red"}>{source.score}%</span>
+                                        </div>
+                                    )}
                                     {source.status === "contradicts" && (
                                         <div className="flex flex-col items-center text-cyber-red text-sm font-mono">
                                             <XCircle className="w-6 h-6 mb-1 drop-shadow-[0_0_5px_rgba(255,51,51,0.5)]" />

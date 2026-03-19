@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 
 interface GaugeChartProps {
     score: number;
+    status: string;
 }
 
-export default function GaugeChart({ score }: GaugeChartProps) {
+export default function GaugeChart({ score, status }: GaugeChartProps) {
     const [animatedScore, setAnimatedScore] = useState(0);
 
     useEffect(() => {
@@ -16,70 +17,86 @@ export default function GaugeChart({ score }: GaugeChartProps) {
         return () => clearTimeout(timeout);
     }, [score]);
 
-    // Determine color and status based on score
-    // User requested: 80-100 green, 50-79 yellow/orange, 0-49 red
-    let color = "#00ff66"; // Reliable (Green)
-    let status = "Reliable";
+    // Determine color based on status or score fallback
+    let color = "#00ff66"; // Likely True (Green)
+    const normalizedStatus = status?.toLowerCase() || "";
 
-    if (score < 50) {
-        color = "#ff3333"; // Fake (Red)
-        status = "Likely Fake";
-    } else if (score < 80) {
+    if (normalizedStatus.includes("fake") || (score < 40 && !status)) {
+        color = "#ff3333"; // Likely Fake (Red)
+    } else if (normalizedStatus.includes("misleading") || (score < 60 && !status)) {
         color = "#ffaa00"; // Misleading (Amber)
-        status = "Misleading";
+    } else if (normalizedStatus.includes("partially") || (score < 80 && !status)) {
+        color = "#ffee00"; // Partially True (Yellow)
+    } else if (normalizedStatus.includes("opinion") || score === 50) {
+        color = "#a855f7"; // Opinion (Purple)
+    } else if (normalizedStatus.includes("unverifiable")) {
+        color = "#94a3b8"; // Unverifiable (Slate)
     }
 
-    // Calculate SVG arc (half circle)
-    const radius = 90;
-    const circumference = Math.PI * radius; // Half circle circumference
+    // Calculate SVG circle properties
+    const radius = 80;
+    const strokeWidth = 12;
+    const center = 100;
+    const circumference = 2 * Math.PI * radius;
     // The dashoffset controls how much of the stroke is hidden
-    // Full offset = circumference (0% visible)
-    // Zero offset = 0 (100% visible)
     const strokeDashoffset = circumference - (animatedScore / 100) * circumference;
 
     return (
         <div className="relative flex flex-col items-center justify-center">
-            {/* We rotate the entire SVG 180 degrees so the arc starts from the left side */}
-            <svg className="w-64 h-36 transform rotate-180" viewBox="0 0 200 100">
-                {/* Background Arc */}
-                <path
-                    d="M 10 10 
-                       A 90 90 0 0 0 190 10"
+            <svg className="w-64 h-64 transform -rotate-90" viewBox="0 0 200 200">
+                {/* Background Circle */}
+                <circle
+                    cx={center}
+                    cy={center}
+                    r={radius}
                     fill="none"
                     stroke="var(--color-cyber-panel-border)"
-                    strokeWidth="12"
-                    strokeLinecap="round"
+                    strokeWidth={strokeWidth}
+                    className="opacity-20"
                 />
-                {/* Foreground Arc - Glow effect */}
-                <path
-                    d="M 10 10 
-                       A 90 90 0 0 0 190 10"
+                
+                {/* Track Circle (Subtle background path) */}
+                <circle
+                    cx={center}
+                    cy={center}
+                    r={radius}
+                    fill="none"
+                    stroke="rgba(255, 255, 255, 0.05)"
+                    strokeWidth={strokeWidth}
+                />
+
+                {/* Foreground Progress Circle */}
+                <circle
+                    cx={center}
+                    cy={center}
+                    r={radius}
                     fill="none"
                     stroke={color}
-                    strokeWidth="12"
+                    strokeWidth={strokeWidth}
                     strokeLinecap="round"
                     strokeDasharray={circumference}
                     strokeDashoffset={strokeDashoffset}
                     className="transition-all duration-1000 ease-out"
-                    style={{ filter: `drop-shadow(0 0 8px ${color}80)` }}
+                    style={{ 
+                        filter: `drop-shadow(0 0 12px ${color}80)`,
+                    }}
                 />
             </svg>
 
-            {/* Absolute positioning for text inside the arc */}
-            {/* Moved slightly up relative to the bounding box since the arc curves downwards in the viewBox (which is then rotated) */}
-            <div className="absolute top-[20%] flex flex-col items-center justify-center w-full">
-                <span className="text-5xl font-bold font-mono" style={{ color, textShadow: `0 0 15px ${color}80` }}>
+            {/* Absolute positioning for text inside the circle */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span className="text-6xl font-bold font-mono transition-all duration-500" style={{ color, textShadow: `0 0 20px ${color}60` }}>
                     {Math.round(animatedScore)}
                 </span>
-                <span className="text-cyber-text-secondary text-sm font-mono mt-1 uppercase tracking-widest">
-                    / 100
+                <span className="text-cyber-text-secondary text-base font-mono mt-1 uppercase tracking-[0.2em] opacity-80">
+                    Confidence
                 </span>
             </div>
 
-            <div className="mt-4 text-center">
-                <div className="text-xs text-cyber-text-secondary uppercase tracking-widest mb-1">Status</div>
-                <div className="text-xl font-bold font-mono tracking-wider" style={{ color, textShadow: `0 0 10px ${color}50` }}>
-                    {status}
+            <div className="mt-8 text-center bg-cyber-bg/40 backdrop-blur-sm px-6 py-3 rounded-full border border-cyber-panel-border/30">
+                <div className="text-[10px] text-cyber-text-secondary uppercase tracking-[0.3em] mb-1 font-mono">Verdict Status</div>
+                <div className="text-xl font-bold font-mono tracking-wider" style={{ color, textShadow: `0 0 10px ${color}40` }}>
+                    {status || "Analyzing..."}
                 </div>
             </div>
         </div>
