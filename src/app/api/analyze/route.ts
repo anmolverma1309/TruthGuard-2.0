@@ -98,8 +98,6 @@ ${input}
 
 
     const models = [
-      "openai/gpt-4o-mini", // Fastest & most reliable (paid)
-      "google/gemini-2.0-flash-001", // Alternative (paid)
       "google/gemini-2.0-flash-lite-preview-02-05:free", // Reliable free fallback
       "meta-llama/llama-3.2-3b-instruct:free", // Fast free fallback
       "mistralai/mistral-7b-instruct:free", // Legacy free fallback
