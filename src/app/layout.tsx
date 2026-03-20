@@ -23,6 +23,7 @@ export const metadata: Metadata = {
 };
 
 import Navbar from "@/components/Navbar";
+import { Providers } from "./Providers";
 
 export default function RootLayout({
   children,
@@ -30,14 +31,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased bg-neo-bg text-neo-text-primary flex flex-col min-h-screen`}
+        className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased bg-neo-bg text-neo-text-primary flex flex-col min-h-screen transition-colors duration-300`}
       >
-        <Navbar />
-        <main className="flex-grow flex flex-col relative">
-          {children}
-        </main>
+        <Providers>
+          <Navbar />
+          <main className="flex-grow flex flex-col relative">
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );

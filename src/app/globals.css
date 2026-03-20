@@ -1,20 +1,43 @@
 @import "tailwindcss";
 
+:root {
+  --neo-bg: #ffffff;
+  --neo-surface: rgba(240, 244, 248, 0.8);
+  --neo-cyan: #00b4d8;
+  --neo-purple: #9d4edd;
+  --neo-border: rgba(0, 0, 0, 0.1);
+  --neo-text-primary: #0f172a;
+  --neo-text-secondary: #64748b;
+  --font-inter: var(--font-inter);
+  --font-geist-sans: var(--font-geist-sans);
+  --font-geist-mono: var(--font-geist-mono);
+  
+  color-scheme: light;
+}
+
+.dark {
+  --neo-bg: #05070a;
+  --neo-surface: rgba(13, 17, 26, 0.6);
+  --neo-cyan: #00e5ff;
+  --neo-purple: #bf5af2;
+  --neo-border: rgba(45, 55, 72, 0.4);
+  --neo-text-primary: #f3f4f6;
+  --neo-text-secondary: #9ca3af;
+  
+  color-scheme: dark;
+}
+
 @theme inline {
-  --color-neo-bg: #05070a;
-  --color-neo-surface: rgba(13, 17, 26, 0.6);
-  --color-neo-cyan: #00e5ff;
-  --color-neo-purple: #bf5af2;
-  --color-neo-border: rgba(45, 55, 72, 0.4);
-  --color-neo-text-primary: #f3f4f6;
-  --color-neo-text-secondary: #9ca3af;
+  --color-neo-bg: var(--neo-bg);
+  --color-neo-surface: var(--neo-surface);
+  --color-neo-cyan: var(--neo-cyan);
+  --color-neo-purple: var(--neo-purple);
+  --color-neo-border: var(--neo-border);
+  --color-neo-text-primary: var(--neo-text-primary);
+  --color-neo-text-secondary: var(--neo-text-secondary);
   
   --font-sans: var(--font-inter), var(--font-geist-sans), sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
-}
-
-:root {
-  color-scheme: dark;
 }
 
 body {
@@ -52,9 +75,16 @@ body::after {
 
 /* TruthGuard X Glassmorphism */
 .neo-glass {
-  background: rgba(13, 17, 26, 0.7);
+  background: var(--neo-surface);
   backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--neo-border);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.dark .neo-glass {
+  background: rgba(13, 17, 26, 0.7);
   box-shadow: 
     0 8px 32px 0 rgba(0, 0, 0, 0.8),
     inset 0 0 0 1px rgba(255, 255, 255, 0.05);
