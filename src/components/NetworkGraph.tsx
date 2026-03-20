@@ -51,27 +51,27 @@ export default function NetworkGraph() {
             .force("center", d3.forceCenter(width / 2, height / 2));
 
         const link = svg.append("g")
-            .attr("stroke", "#00e5ff")
-            .attr("stroke-opacity", 0.4)
+            .attr("stroke", "rgba(0, 229, 255, 0.2)")
+            .attr("stroke-opacity", 0.6)
             .selectAll("line")
             .data(data.links)
             .join("line")
-            .attr("stroke-width", d => Math.sqrt(d.value) * 1.5);
+            .attr("stroke-width", d => Math.sqrt(d.value) * 1.2);
 
         const node = svg.append("g")
-            .attr("stroke", "#0d0d12")
-            .attr("stroke-width", 2)
+            .attr("stroke", "#050508")
+            .attr("stroke-width", 1.5)
             .selectAll("circle")
             .data(data.nodes)
             .join("circle")
             .attr("r", d => d.radius)
-            // Group 1: Source (Red), Group 2: Amplifiers (Cyan), Group 3: Super-spreaders (Green/Amber)
-            .attr("fill", d => d.group === 1 ? "#ff3333" : d.group === 2 ? "#00f0ff" : "#ffaa00");
+            // Group 1: Source (Purple), Group 2: Amplifiers (Cyan), Group 3: Super-spreaders (White)
+            .attr("fill", d => d.group === 1 ? "#bf5af2" : d.group === 2 ? "#00e5ff" : "#ffffff");
 
         // Add glowing filter definition
         const defs = svg.append("defs");
         const filter = defs.append("filter").attr("id", "glow");
-        filter.append("feGaussianBlur").attr("stdDeviation", "3").attr("result", "coloredBlur");
+        filter.append("feGaussianBlur").attr("stdDeviation", "4").attr("result", "coloredBlur");
         const feMerge = filter.append("feMerge");
         feMerge.append("feMergeNode").attr("in", "coloredBlur");
         feMerge.append("feMergeNode").attr("in", "SourceGraphic");
@@ -86,12 +86,12 @@ export default function NetworkGraph() {
             .data(data.nodes)
             .join("text")
             .text(d => d.label)
-            .attr("font-size", 11)
-            .attr("fill", "#e2e8f0")
-            .attr("dx", 18)
+            .attr("font-size", 10)
+            .attr("fill", "#9ca3af")
+            .attr("dx", d => d.radius + 8)
             .attr("dy", 4)
-            .attr("class", "font-mono pointer-events-none")
-            .style("text-shadow", "0 0 5px #050508, 0 0 10px #050508");
+            .attr("class", "font-sans uppercase tracking-widest font-bold pointer-events-none")
+            .style("text-shadow", "0 0 10px #050508");
 
         simulation.on("tick", () => {
             link
@@ -122,21 +122,21 @@ export default function NetworkGraph() {
         <div className="w-full">
             <div
                 ref={containerRef}
-                className="w-full h-[600px] cyber-glass rounded-xl overflow-hidden border border-cyber-panel-border relative"
-                style={{ backgroundImage: 'radial-gradient(circle at center, rgba(0, 240, 255, 0.05) 0%, transparent 70%)' }}
+                className="w-full h-[600px] neo-glass rounded-[32px] overflow-hidden border border-white/10 relative"
+                style={{ backgroundImage: 'radial-gradient(circle at center, rgba(0, 229, 255, 0.03) 0%, transparent 80%)' }}
             >
-                <div className="absolute top-4 left-4 flex flex-col space-y-2 z-10 pointer-events-none">
-                    <div className="flex items-center space-x-2">
-                        <span className="w-3 h-3 rounded-full bg-cyber-red" />
-                        <span className="text-xs font-mono text-cyber-text-secondary">Original Source</span>
+                <div className="absolute top-8 left-8 flex flex-col space-y-3 z-10 pointer-events-none">
+                    <div className="flex items-center space-x-3">
+                        <span className="w-2.5 h-2.5 rounded-full bg-neo-purple shadow-[0_0_8px_rgba(191,90,242,0.5)]" />
+                        <span className="text-[10px] font-mono text-neo-text-secondary uppercase tracking-widest font-bold">Signal Origin</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <span className="w-3 h-3 rounded-full bg-cyber-amber" />
-                        <span className="text-xs font-mono text-cyber-text-secondary">Super Spreaders</span>
+                        <span className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
+                        <span className="text-[10px] font-mono text-neo-text-secondary uppercase tracking-widest font-bold">Super Node</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <span className="w-3 h-3 rounded-full bg-cyber-cyan" />
-                        <span className="text-xs font-mono text-cyber-text-secondary">Amplifiers / Reposts</span>
+                        <span className="w-2.5 h-2.5 rounded-full bg-neo-cyan shadow-[0_0_8px_rgba(0,229,255,0.5)]" />
+                        <span className="text-[10px] font-mono text-neo-text-secondary uppercase tracking-widest font-bold">Propagator</span>
                     </div>
                 </div>
             </div>

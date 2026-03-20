@@ -1,16 +1,13 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-cyber-bg: #050508;
-  --color-cyber-panel: #0d0d12;
-  --color-cyber-panel-border: #1a1a24;
-  --color-cyber-accent: #00f0ff;
-  --color-cyber-cyan: #00e5ff;
-  --color-cyber-red: #ff3333;
-  --color-cyber-green: #00ff66;
-  --color-cyber-amber: #ffaa00;
-  --color-cyber-text-primary: #e2e8f0;
-  --color-cyber-text-secondary: #94a3b8;
+  --color-neo-bg: #05070a;
+  --color-neo-surface: rgba(13, 17, 26, 0.6);
+  --color-neo-cyan: #00e5ff;
+  --color-neo-purple: #bf5af2;
+  --color-neo-border: rgba(45, 55, 72, 0.4);
+  --color-neo-text-primary: #f3f4f6;
+  --color-neo-text-secondary: #9ca3af;
   
   --font-sans: var(--font-inter), var(--font-geist-sans), sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
@@ -21,34 +18,87 @@
 }
 
 body {
-  background-color: var(--color-cyber-bg);
-  color: var(--color-cyber-text-primary);
+  background-color: var(--color-neo-bg);
+  color: var(--color-neo-text-primary);
   font-family: var(--font-sans);
   margin: 0;
   min-height: 100vh;
-  /* Glowing grid background */
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* TruthGuard X Dynamic Mesh Background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.05) 0%, transparent 70%),
+    radial-gradient(circle at 10% 10%, rgba(191, 90, 242, 0.05) 0%, transparent 40%);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -9;
   background-image: 
-    linear-gradient(to right, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+    linear-gradient(rgba(0, 229, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(circle at center, black, transparent 80%);
 }
 
-/* Glassmorphism utilities */
-.cyber-glass {
-  background: rgba(13, 13, 18, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--color-cyber-panel-border);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+/* TruthGuard X Glassmorphism */
+.neo-glass {
+  background: rgba(13, 17, 26, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
-.cyber-glass-glow {
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(0, 240, 255, 0.05);
+.neo-border-gradient {
+  position: relative;
+  background: var(--color-neo-surface);
+  border-radius: inherit;
 }
 
-.glow-text {
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+.neo-border-gradient::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  background: linear-gradient(135deg, var(--color-neo-cyan), var(--color-neo-purple));
+  border-radius: inherit;
+  padding: 1px;
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
 }
 
-.glow-text-red {
-  text-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+.neo-glow-cyan {
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+}
+
+.neo-glow-purple {
+  box-shadow: 0 0 20px rgba(191, 90, 242, 0.2);
+}
+
+.neo-text-glow {
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Animations from the image */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
 }

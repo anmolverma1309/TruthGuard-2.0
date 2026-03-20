@@ -1,64 +1,75 @@
 import Link from "next/link";
-import { Shield, Activity, Network, ArrowRight } from "lucide-react";
+import { Shield, Activity, Network, ArrowRight, Zap, Cpu, Lock } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex-grow flex flex-col items-center justify-center p-6 relative overflow-hidden min-h-[calc(100vh-64px)]">
-      {/* Decorative elements */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyber-accent/5 rounded-full blur-[100px] -z-10" />
+    <div className="flex-grow flex flex-col items-center justify-center p-6 pt-32 relative overflow-hidden min-h-screen">
+      
+      {/* Main Hero Container */}
+      <div className="relative z-10 w-full max-w-5xl group">
+        {/* Glow behind the panel */}
+        <div className="absolute -inset-10 bg-neo-cyan/10 blur-[120px] rounded-full opacity-50 group-hover:opacity-80 transition-opacity" />
+        
+        <div className="neo-glass rounded-[40px] p-12 md:p-24 text-center relative overflow-hidden border border-white/10">
+          {/* Animated corner accents */}
+          <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-neo-cyan/40 rounded-tl-[40px]" />
+          <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-neo-purple/40 rounded-br-[40px]" />
 
-      <div className="text-center max-w-4xl mx-auto space-y-8 z-10 pt-16">
-        <div className="inline-flex items-center space-x-2 bg-cyber-panel border border-cyber-panel-border px-4 py-2 rounded-full mb-4 cyber-glass">
-          <span className="w-2 h-2 rounded-full bg-cyber-red animate-pulse glow-text-red" />
-          <span className="text-sm font-mono text-cyber-text-secondary">System Online • Monitoring Global Feeds</span>
-        </div>
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-8 neo-text-glow">
+            TRUTH <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-neo-cyan to-neo-purple">GUARD</span>
+          </h1>
 
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight">
-          AI Intelligence Against <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-cyan to-cyber-accent glow-text pb-2 inline-block">
-            The Spread of False Information
-          </span>
-        </h1>
+          <p className="text-xl md:text-2xl text-neo-text-secondary max-w-2xl mx-auto mb-12 font-light tracking-wide">
+            Explore highly interactive experiences <br className="hidden md:block" />
+            with cursor-responsive animations.
+          </p>
 
-        <p className="text-lg md:text-xl text-cyber-text-secondary max-w-2xl mx-auto">
-          Detect, analyze, and contain misinformation across the internet with military-grade AI. Real-time credibility scoring, propagation tracking, and evidence verification.
-        </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Link
+              href="/dashboard"
+              className="group relative px-12 py-4 rounded-full overflow-hidden transition-all duration-300 hover:scale-105"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-neo-cyan to-neo-cyan/80 neo-glow-cyan" />
+              <span className="relative z-10 text-neo-bg font-bold tracking-widest flex items-center gap-2 uppercase">
+                Explore <ArrowRight className="w-4 h-4" />
+              </span>
+            </Link>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
-          <Link
-            href="/dashboard"
-            className="group flex items-center justify-center space-x-2 w-full sm:w-auto px-8 py-4 bg-cyber-accent/10 border border-cyber-accent text-cyber-accent hover:bg-cyber-accent hover:text-black transition-all duration-300 rounded-md font-mono font-bold cyber-glass-glow uppercase tracking-wider"
-          >
-            <span>Analyze Content</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-
-          <Link
-            href="/radar"
-            className="flex items-center justify-center space-x-2 w-full sm:w-auto px-8 py-4 bg-cyber-panel border border-cyber-panel-border text-white hover:bg-cyber-panel-border transition-all duration-300 rounded-md font-mono uppercase tracking-wider cyber-glass"
-          >
-            <Activity className="w-5 h-5" />
-            <span>Explore Radar</span>
-          </Link>
+            <Link
+              href="/integration"
+              className="group relative px-12 py-4 rounded-full overflow-hidden transition-all duration-300 hover:scale-105"
+            >
+              <div className="absolute inset-0 bg-neo-purple neo-glow-purple" />
+              <span className="relative z-10 text-white font-bold tracking-widest uppercase">
+                Get Started
+              </span>
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Features preview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-32 max-w-6xl mx-auto w-full z-10 pb-16">
-        <div className="cyber-glass p-8 rounded-lg text-left border-t-2 border-t-cyber-accent hover:-translate-y-2 transition-transform duration-300">
-          <Shield className="w-10 h-10 text-cyber-accent mb-6" />
-          <h3 className="text-xl font-bold mb-3">Claim Verification</h3>
-          <p className="text-cyber-text-secondary text-sm leading-relaxed">Cross-references statements against trusted knowledge graphs and factual databases in milliseconds.</p>
+      {/* Bottom Status Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-24 max-w-4xl w-full z-10 pb-16">
+        <div className="neo-glass px-8 py-5 rounded-2xl flex items-center gap-4 border border-white/5 hover:border-neo-cyan/30 transition-colors group">
+          <div className="p-2 rounded-xl bg-neo-cyan/10 text-neo-cyan shadow-[0_0_15px_rgba(0,229,255,0.1)]">
+            <Zap className="w-5 h-5 fill-neo-cyan/20" />
+          </div>
+          <span className="text-sm font-medium tracking-wide text-white/80 group-hover:text-white transition-colors">Real-time Data</span>
         </div>
-        <div className="cyber-glass p-8 rounded-lg text-left border-t-2 border-t-cyber-cyan hover:-translate-y-2 transition-transform duration-300">
-          <Network className="w-10 h-10 text-cyber-cyan mb-6" />
-          <h3 className="text-xl font-bold mb-3">Propagation Maps</h3>
-          <p className="text-cyber-text-secondary text-sm leading-relaxed">Visualizes the spread of false narratives through complex network analysis and tracking nodes.</p>
+        
+        <div className="neo-glass px-8 py-5 rounded-2xl flex items-center gap-4 border border-white/5 hover:border-neo-purple/30 transition-colors group">
+          <div className="p-2 rounded-xl bg-neo-purple/10 text-neo-purple shadow-[0_0_15px_rgba(191,90,242,0.1)]">
+            <Cpu className="w-5 h-5 fill-neo-purple/20" />
+          </div>
+          <span className="text-sm font-medium tracking-wide text-white/80 group-hover:text-white transition-colors">Adaptive Interface</span>
         </div>
-        <div className="cyber-glass p-8 rounded-lg text-left border-t-2 border-t-cyber-red hover:-translate-y-2 transition-transform duration-300">
-          <Activity className="w-10 h-10 text-cyber-red mb-6" />
-          <h3 className="text-xl font-bold mb-3">Threat Radar</h3>
-          <p className="text-cyber-text-secondary text-sm leading-relaxed">Global monitoring dashboard identifying emerging emotional manipulation and propaganda campaigns.</p>
+
+        <div className="neo-glass px-8 py-5 rounded-2xl flex items-center gap-4 border border-white/5 hover:border-white/20 transition-colors group">
+          <div className="p-2 rounded-xl bg-white/5 text-neo-cyan shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+            <Lock className="w-5 h-5" />
+          </div>
+          <span className="text-sm font-medium tracking-wide text-white/80 group-hover:text-white transition-colors">Secure Core</span>
         </div>
       </div>
     </div>

@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <body
-        className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased bg-cyber-bg text-cyber-text-primary flex flex-col min-h-screen`}
+        className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased bg-neo-bg text-neo-text-primary flex flex-col min-h-screen`}
       >
         <Navbar />
         <main className="flex-grow flex flex-col relative">

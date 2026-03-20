@@ -22,11 +22,11 @@ export default function GaugeChart({ score, status }: GaugeChartProps) {
     const normalizedStatus = status?.toLowerCase() || "";
 
     if (normalizedStatus.includes("fake") || (score < 40 && !status)) {
-        color = "#ff3333"; // Likely Fake (Red)
+        color = "#bf5af2"; // Likely Fake (Purple) - Matches image style
     } else if (normalizedStatus.includes("misleading") || (score < 60 && !status)) {
         color = "#ffaa00"; // Misleading (Amber)
     } else if (normalizedStatus.includes("partially") || (score < 80 && !status)) {
-        color = "#ffee00"; // Partially True (Yellow)
+        color = "#00e5ff"; // Partially True (Cyan)
     } else if (normalizedStatus.includes("opinion") || score === 50) {
         color = "#a855f7"; // Opinion (Purple)
     } else if (normalizedStatus.includes("unverifiable")) {
@@ -35,7 +35,7 @@ export default function GaugeChart({ score, status }: GaugeChartProps) {
 
     // Calculate SVG circle properties
     const radius = 80;
-    const strokeWidth = 12;
+    const strokeWidth = 10;
     const center = 100;
     const circumference = 2 * Math.PI * radius;
     // The dashoffset controls how much of the stroke is hidden
@@ -43,16 +43,15 @@ export default function GaugeChart({ score, status }: GaugeChartProps) {
 
     return (
         <div className="relative flex flex-col items-center justify-center">
-            <svg className="w-64 h-64 transform -rotate-90" viewBox="0 0 200 200">
+            <svg className="w-72 h-72 transform -rotate-90" viewBox="0 0 200 200">
                 {/* Background Circle */}
                 <circle
                     cx={center}
                     cy={center}
                     r={radius}
                     fill="none"
-                    stroke="var(--color-cyber-panel-border)"
+                    stroke="rgba(255,255,255,0.05)"
                     strokeWidth={strokeWidth}
-                    className="opacity-20"
                 />
                 
                 {/* Track Circle (Subtle background path) */}
@@ -61,7 +60,7 @@ export default function GaugeChart({ score, status }: GaugeChartProps) {
                     cy={center}
                     r={radius}
                     fill="none"
-                    stroke="rgba(255, 255, 255, 0.05)"
+                    stroke="rgba(255, 255, 255, 0.02)"
                     strokeWidth={strokeWidth}
                 />
 
@@ -78,25 +77,25 @@ export default function GaugeChart({ score, status }: GaugeChartProps) {
                     strokeDashoffset={strokeDashoffset}
                     className="transition-all duration-1000 ease-out"
                     style={{ 
-                        filter: `drop-shadow(0 0 12px ${color}80)`,
+                        filter: `drop-shadow(0 0 15px ${color}80)`,
                     }}
                 />
             </svg>
 
             {/* Absolute positioning for text inside the circle */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-6xl font-bold font-mono transition-all duration-500" style={{ color, textShadow: `0 0 20px ${color}60` }}>
+                <span className="text-7xl font-black transition-all duration-500 tracking-tighter" style={{ color, textShadow: `0 0 30px ${color}40` }}>
                     {Math.round(animatedScore)}
                 </span>
-                <span className="text-cyber-text-secondary text-base font-mono mt-1 uppercase tracking-[0.2em] opacity-80">
-                    Confidence
+                <span className="text-neo-text-secondary text-[10px] uppercase tracking-[0.4em] font-bold opacity-60">
+                    Confidence Matrix
                 </span>
             </div>
 
-            <div className="mt-8 text-center bg-cyber-bg/40 backdrop-blur-sm px-6 py-3 rounded-full border border-cyber-panel-border/30">
-                <div className="text-[10px] text-cyber-text-secondary uppercase tracking-[0.3em] mb-1 font-mono">Verdict Status</div>
-                <div className="text-xl font-bold font-mono tracking-wider" style={{ color, textShadow: `0 0 10px ${color}40` }}>
-                    {status || "Analyzing..."}
+            <div className="mt-12 text-center neo-glass px-10 py-5 rounded-2xl border border-white/5 shadow-2xl">
+                <div className="text-[10px] text-neo-text-secondary uppercase tracking-[0.3em] mb-2 font-mono font-bold opacity-60">Neural Verdict</div>
+                <div className="text-2xl font-black tracking-tight" style={{ color, textShadow: `0 0 15px ${color}30` }}>
+                    {status || "Analyzing Signal..."}
                 </div>
             </div>
         </div>

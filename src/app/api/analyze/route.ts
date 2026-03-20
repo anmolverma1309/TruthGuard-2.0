@@ -98,10 +98,10 @@ ${input}
 
 
     const models = [
-      "google/gemini-2.0-flash-lite-preview-02-05:free", // Reliable free fallback
-      "meta-llama/llama-3.2-3b-instruct:free", // Fast free fallback
-      "mistralai/mistral-7b-instruct:free", // Legacy free fallback
-      "qwen/qwen-2.5-72b-instruct:free", // High quality free fallback
+      "meta-llama/llama-3.1-8b-instruct",
+      "mistralai/mistral-7b-instruct",
+      "openai/gpt-3.5-turbo",
+      "gryphe/mythomax-l2-13b"
     ];
 
     const backupKey = process.env.BACKUP_API_KEY?.trim();
@@ -146,7 +146,7 @@ ${input}
                   'X-Title': 'TruthGuard X',
                   'Content-Type': 'application/json'
                 },
-                timeout: 30000 // 30s timeout for slower models
+                timeout: 10000 // Reduced to 10s for faster fallback
               }
             );
 
