@@ -24,6 +24,9 @@ export const metadata: Metadata = {
 
 import Navbar from "@/components/Navbar";
 import { Providers } from "./Providers";
+import BackgroundLayers from "@/components/BackgroundLayers";
+import CustomCursor from "@/components/CustomCursor";
+import Footer from "@/components/Footer";
 
 export default function RootLayout({
   children,
@@ -33,13 +36,16 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased bg-neo-bg text-neo-text-primary flex flex-col min-h-screen transition-colors duration-300`}
+        className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen transition-colors duration-300`}
       >
+        <BackgroundLayers />
+        <CustomCursor />
         <Providers>
           <Navbar />
-          <main className="flex-grow flex flex-col relative">
+          <main className="flex-grow flex flex-col relative z-10">
             {children}
           </main>
+          <Footer />
         </Providers>
       </body>
     </html>

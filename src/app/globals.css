@@ -1,134 +1,208 @@
 @import "tailwindcss";
 
-:root {
-  --neo-bg: #ffffff;
-  --neo-surface: rgba(240, 244, 248, 0.8);
-  --neo-cyan: #00b4d8;
-  --neo-purple: #9d4edd;
-  --neo-border: rgba(0, 0, 0, 0.1);
-  --neo-text-primary: #0f172a;
-  --neo-text-secondary: #64748b;
-  --font-inter: var(--font-inter);
-  --font-geist-sans: var(--font-geist-sans);
-  --font-geist-mono: var(--font-geist-mono);
-  
-  color-scheme: light;
+html {
+  font-size: 22px;
 }
 
-.dark {
-  --neo-bg: #05070a;
-  --neo-surface: rgba(13, 17, 26, 0.6);
-  --neo-cyan: #00e5ff;
-  --neo-purple: #bf5af2;
-  --neo-border: rgba(45, 55, 72, 0.4);
-  --neo-text-primary: #f3f4f6;
-  --neo-text-secondary: #9ca3af;
+:root {
+  --bg:        #080B1A;
+  --bg2:       #0D1130;
+  --bg3:       #111840;
+  --gold:      #D4A843;
+  --gold2:     #F0C060;
+  --gold-dim:  rgba(212,168,67,0.15);
+  --gold-faint:rgba(212,168,67,0.07);
+  --rose:      #C0365A;
+  --rose2:     #E85080;
+  --rose-dim:  rgba(192,54,90,0.18);
+  --teal:      #1FCFCF;
+  --teal2:     #5EE8E8;
+  --teal-dim:  rgba(31,207,207,0.14);
+  --green:     #3FD97A;
+  --amber:     #FFAA30;
+  --red:       #E84060;
+  --text:      #E8E0F0;
+  --text-mid:  #A89EC0;
+  --text-dim:  #6860A0;
+
+  /* glass surfaces */
+  --glass-gold: rgba(212,168,67,0.08);
+  --glass-rose: rgba(192,54,90,0.08);
+  --glass-teal: rgba(31,207,207,0.07);
+  --glass-base: rgba(13,17,48,0.60);
+  --glass-dark: rgba(8,11,26,0.70);
+
+  --border-gold:  rgba(212,168,67,0.30);
+  --border-gold2: rgba(240,192,96,0.55);
+  --border-rose:  rgba(232,80,128,0.30);
+  --border-teal:  rgba(94,232,232,0.25);
+  --border-dim:   rgba(168,158,192,0.12);
+
+  --serif: 'Bell MT', 'Times New Roman', Georgia, serif;
+  --old: 'Old English Text MT', 'UnifrakturMaguntia', fantasy;
+}
+
+.light {
+  --bg:        #F8F9FC;
+  --bg2:       #EDF2F7;
+  --bg3:       #E2E8F0;
+  --gold:      #B38B2D;
+  --gold2:     #8C6D23;
+  --rose:      #A02D4C;
+  --rose2:     #7A223A;
+  --teal:      #1AABAB;
+  --teal2:     #148D8D;
+  --text:      #1A202C;
+  --text-mid:  #4A5568;
+  --text-dim:  #718096;
   
-  color-scheme: dark;
+  --glass-base: rgba(0,0,0,0.03);
+  --border-dim: rgba(0,0,0,0.1);
+}
+
+.light .bg-mesh {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(179,139,45,0.05) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 80% 75%, rgba(160,45,76,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 80% at 50% 50%, rgba(248,249,252,0.98) 30%, var(--bg) 100%);
 }
 
 @theme inline {
-  --color-neo-bg: var(--neo-bg);
-  --color-neo-surface: var(--neo-surface);
-  --color-neo-cyan: var(--neo-cyan);
-  --color-neo-purple: var(--neo-purple);
-  --color-neo-border: var(--neo-border);
-  --color-neo-text-primary: var(--neo-text-primary);
-  --color-neo-text-secondary: var(--neo-text-secondary);
+  --color-tg-bg: var(--bg);
+  --color-tg-gold: var(--gold);
+  --color-tg-gold2: var(--gold2);
+  --color-tg-rose: var(--rose);
+  --color-tg-teal: var(--teal);
+  --color-tg-text: var(--text);
+  --color-tg-text-mid: var(--text-mid);
   
-  --font-sans: var(--font-inter), var(--font-geist-sans), sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  --font-serif: var(--serif);
+  --font-old: var(--old);
+
+  /* Neo Compatibility Mapping */
+  --color-neo-bg: var(--bg);
+  --color-neo-surface: var(--glass-base);
+  --color-neo-cyan: var(--teal);
+  --color-neo-purple: var(--rose);
+  --color-neo-border: var(--border-gold);
+  --color-neo-text-primary: var(--text);
+  --color-neo-text-secondary: var(--text-mid);
+}
+
+.neo-glass {
+  background: var(--glass-base);
+  backdrop-filter: blur(28px) saturate(150%);
+  border: 1px solid var(--border-dim);
 }
 
 body {
-  background-color: var(--color-neo-bg);
-  color: var(--color-neo-text-primary);
-  font-family: var(--font-sans);
-  margin: 0;
-  min-height: 100vh;
-  position: relative;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
   overflow-x: hidden;
+  line-height: 1.75;
+  cursor: none;
 }
 
-/* TruthGuard X Dynamic Mesh Background */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -10;
-  background: 
-    radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.05) 0%, transparent 70%),
-    radial-gradient(circle at 10% 10%, rgba(191, 90, 242, 0.05) 0%, transparent 40%);
+/* ─── BACKGROUND ─────────────────────────── */
+.bg-tg { position: fixed; inset: 0; z-index: -20; pointer-events: none; overflow: hidden; }
+
+.bg-mesh {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(212,168,67,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 80% 75%, rgba(192,54,90,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 70% at 55% 45%, rgba(31,207,207,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 80% at 50% 50%, rgba(13,17,48,0.95) 30%, var(--bg) 100%);
+  animation: meshDrift 18s ease-in-out infinite alternate;
 }
 
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -9;
-  background-image: 
-    linear-gradient(rgba(0, 229, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 255, 0.02) 1px, transparent 1px);
-  background-size: 50px 50px;
-  mask-image: radial-gradient(circle at center, black, transparent 80%);
+@keyframes meshDrift {
+  0%  { filter: hue-rotate(0deg) brightness(1); }
+  50% { filter: hue-rotate(8deg) brightness(1.04); }
+  100%{ filter: hue-rotate(-5deg) brightness(0.97); }
 }
 
-/* TruthGuard X Glassmorphism */
-.neo-glass {
-  background: var(--neo-surface);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--neo-border);
-  box-shadow: 
-    0 8px 32px 0 rgba(0, 0, 0, 0.1),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+.bg-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(212,168,67,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212,168,67,0.035) 1px, transparent 1px);
+  background-size: 72px 72px;
 }
 
-.dark .neo-glass {
-  background: rgba(13, 17, 26, 0.7);
-  box-shadow: 
-    0 8px 32px 0 rgba(0, 0, 0, 0.8),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+.bg-lines {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0, transparent 3px,
+    rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px
+  );
 }
 
-.neo-border-gradient {
-  position: relative;
-  background: var(--color-neo-surface);
-  border-radius: inherit;
+.bg-vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 120% 120% at 50% 50%, transparent 40%, rgba(8,11,26,0.7) 100%);
 }
 
-.neo-border-gradient::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  z-index: -1;
-  background: linear-gradient(135deg, var(--color-neo-cyan), var(--color-neo-purple));
-  border-radius: inherit;
-  padding: 1px;
-  -webkit-mask: 
-     linear-gradient(#fff 0 0) content-box, 
-     linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
+/* ─── CUSTOM CURSOR ──────────────────────── */
+.cur { position: fixed; width: 9px; height: 9px; border-radius: 50%; background: var(--gold2); pointer-events: none; z-index: 9999; transition: background .2s; transform: translate(-50%, -50%); }
+.cur-ring {
+  position: fixed; width: 36px; height: 36px; border-radius: 50%;
+  border: 1.5px solid rgba(240,192,96,0.65);
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width .22s, height .22s, border-color .22s;
 }
 
-.neo-glow-cyan {
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+/* ─── GLASS MIXINS ───────────────────────── */
+.g-gold {
+  background: var(--glass-gold);
+  backdrop-filter: blur(24px) saturate(170%);
+  border: 1px solid var(--border-gold);
+}
+.g-rose {
+  background: var(--glass-rose);
+  backdrop-filter: blur(24px) saturate(170%);
+  border: 1px solid var(--border-rose);
+}
+.g-teal {
+  background: var(--glass-teal);
+  backdrop-filter: blur(24px) saturate(170%);
+  border: 1px solid var(--border-teal);
+}
+.g-base {
+  background: var(--glass-base);
+  backdrop-filter: blur(28px) saturate(150%);
+  border: 1px solid var(--border-dim);
 }
 
-.neo-glow-purple {
-  box-shadow: 0 0 20px rgba(191, 90, 242, 0.2);
-}
+/* ─── ANIMATIONS ─────────────────────────── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes barGrow { from { width: 0 !important; } }
+@keyframes barShine { 0% { transform: translateX(-200%); } 100% { transform: translateX(200%); } }
 
-.neo-text-glow {
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-}
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity .75s ease, transform .75s ease; }
+.reveal.on { opacity: 1; transform: translateY(0); }
+.d1 { transition-delay: .10s; }
+.d2 { transition-delay: .20s; }
+.d3 { transition-delay: .30s; }
+.d4 { transition-delay: .40s; }
 
-/* Animations from the image */
+/* Existing tailwind animations / utilities to keep if needed */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
 
-.animate-float {
-  animation: float 6s ease-in-out infinite;
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }

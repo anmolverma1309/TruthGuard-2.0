@@ -5,98 +5,126 @@ import { usePathname } from "next/navigation";
 import { ShieldAlert, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import FlagIcon from "./FlagIcon";
+
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Navbar() {
     const pathname = usePathname();
     const { theme, setTheme } = useTheme();
+    const { locale, setLocale, t } = useLanguage();
     const [mounted, setMounted] = useState(false);
+    const [showLang, setShowLang] = useState(false);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
+    const languages = [
+        { code: 'en', name: 'EN' },
+        { code: 'hi', name: 'हिं' },
+        { code: 'pa', name: 'ਪੰ' },
+        { code: 'mr', name: 'मरा' },
+        { code: 'bn', name: 'বাংলা' },
+        { code: 'ta', name: 'தமிழ்' },
+    ];
+
     const links = [
-        { name: "Home", href: "/" },
-        { name: "Dashboard", href: "/dashboard" },
-        { name: "Deepfake", href: "/lab" },
-        { name: "Report Assistance (FIR)", href: "/integration" },
-        { name: "Upgrade", href: "/payment" },
+        { name: t('home'), href: "/" },
+        { name: t('fir_report'), href: "/fir-report" },
+        { name: t('dashboard'), href: "/dashboard" },
+        { name: t('deepfake'), href: "/lab" },
+        { name: t('upgrade'), href: "/payment" },
     ];
 
     if (!mounted) return null;
+    
+    // Hide navbar on FIR page
+    if (pathname === "/fir-report") return null;
 
     return (
-        <nav className="fixed top-6 left-0 right-0 z-50 flex justify-between items-center px-12 pointer-events-none">
-            {/* Logo */}
-            <Link href="/" className="flex items-center space-x-2 group pointer-events-auto">
-                <div className="relative">
-                    <ShieldAlert className="w-8 h-8 text-neo-cyan transition-all group-hover:scale-110" />
-                    <div className="absolute inset-0 bg-neo-cyan/20 blur-xl rounded-full" />
+        <nav className="fixed top-0 left-0 right-0 z-[200] px-6 md:px-12 py-4 flex items-center justify-between bg-[rgba(8,11,26,0.75)] backdrop-blur-[28px] border-b border-[var(--border-gold)]">
+            {/* Left: Language & Logo */}
+            <div className="flex items-center gap-8">
+                {/* Logo & Flag */}
+                <div className="flex items-center gap-6">
+                    <Link href="/" className="nav-logo group relative text-2xl md:text-3xl">
+                        <span className="relative z-10 transition-all duration-500 group-hover:tracking-[5px] font-old">
+                            TruthGuard
+                        </span>
+                        <div className="absolute -inset-2 bg-[var(--gold2)]/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </Link>
+                    <FlagIcon className="w-8 h-5 opacity-100 brightness-125 shadow-xl" />
                 </div>
-                <span className="text-xl font-bold tracking-[0.2em] text-neo-text-primary neo-text-glow uppercase">
-                    TRUTH<span className="text-neo-cyan">GUARD</span>
-                </span>
-            </Link>
 
-            {/* Floating Nav Pill */}
-            <div className="neo-glass rounded-full px-2 py-1.5 border border-white/10 flex items-center space-x-1 pointer-events-auto transition-all">
-                {links.map((link) => {
-                    const isActive = pathname === link.href || (pathname.startsWith(link.href) && link.href !== "/");
-                    return (
-                        <Link
-                            key={link.name}
-                            href={link.href}
-                            className={`px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 relative ${
-                                isActive
-                                    ? "text-neo-text-primary bg-neo-cyan/10 shadow-[inset_0_0_10px_rgba(0,229,255,0.2)] border border-neo-cyan/30"
-                                    : "text-neo-text-secondary hover:text-neo-text-primary"
-                            }`}
-                        >
-                            {isActive && (
-                                <div className="absolute inset-x-4 -bottom-px h-px bg-gradient-to-r from-transparent via-neo-cyan to-transparent shadow-[0_0_8px_var(--color-neo-cyan)]" />
-                            )}
-                            {link.name}
-                        </Link>
-                    );
-                })}
+                {/* Desktop Links */}
+                <ul className="hidden md:flex items-center gap-9 list-none mb-0">
+                    {links.map((link) => {
+                        const isActive = pathname === link.href || (pathname.startsWith(link.href) && link.href !== "/");
+                        return (
+                            <li key={link.name}>
+                                <Link
+                                    href={link.href}
+                                    className={`font-serif italic text-xl tracking-wider transition-colors duration-200 ${
+                                        isActive ? "text-[var(--gold2)]" : "text-[var(--text-mid)] hover:text-[var(--gold2)]"
+                                    }`}
+                                >
+                                    {link.name}
+                                </Link>
+                            </li>
+                        );
+                    })}
+                </ul>
             </div>
 
-            {/* Right Section: Theme & Auth */}
-            <div className="flex items-center gap-6 pointer-events-auto">
-                {/* Auth Link */}
-                <Link 
-                    href="/auth"
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all group"
-                >
-                    <User className="w-4 h-4 text-neo-cyan group-hover:scale-110 transition-transform" />
-                    <span className="text-[10px] font-mono tracking-widest uppercase">Agent Access</span>
-                </Link>
-
-                {/* Theme Toggle */}
-                <div className="flex flex-col items-center">
-                    <div className="neo-glass rounded-full p-1 border border-white/10 flex items-center space-x-1 cursor-pointer overflow-hidden">
-                        <button 
-                            onClick={() => setTheme("dark")}
-                            className={`p-1.5 rounded-full transition-all duration-300 ${
-                                theme === "dark" 
-                                    ? "bg-neo-cyan/10 text-neo-cyan shadow-[0_0_15px_rgba(0,229,255,0.3)]" 
-                                    : "text-neo-text-secondary hover:text-neo-text-primary"
-                            }`}
-                        >
-                            <Moon className="w-4 h-4" />
-                        </button>
-                        <button 
-                            onClick={() => setTheme("light")}
-                            className={`p-1.5 rounded-full transition-all duration-300 ${
-                                theme === "light" 
-                                    ? "bg-neo-cyan/10 text-neo-cyan shadow-[0_0_15px_rgba(30,144,255,0.3)]" 
-                                    : "text-neo-text-secondary hover:text-neo-text-primary"
-                            }`}
-                        >
-                            <Sun className="w-4 h-4" />
-                        </button>
-                    </div>
+            {/* Right: Lang, Theme, CTA */}
+            <div className="flex items-center gap-4 md:gap-8">
+                {/* Language Selector */}
+                <div className="relative">
+                    <button 
+                        onClick={() => setShowLang(!showLang)}
+                        className="w-10 h-10 rounded-full flex items-center justify-center border border-[var(--border-gold)] bg-[var(--glass-gold)] text-[var(--gold2)] hover:scale-110 transition-all font-serif italic text-xs shadow-[0_0_15px_rgba(212,168,67,0.15)]"
+                    >
+                        {languages.find(l => l.code === locale)?.name}
+                    </button>
+                    
+                    {showLang && (
+                        <div className="absolute top-14 right-0 g-base rounded-lg p-2 border border-[var(--border-gold)] flex flex-col gap-1 min-w-[100px] shadow-2xl animate-in fade-in slide-in-from-top-2 z-[210]">
+                            {languages.map((lang) => (
+                                <button
+                                    key={lang.code}
+                                    onClick={() => {
+                                        setLocale(lang.code as any);
+                                        setShowLang(false);
+                                    }}
+                                    className={`px-3 py-2 rounded text-xs font-serif italic transition-all ${
+                                        locale === lang.code 
+                                            ? "bg-[var(--gold-dim)] text-[var(--gold2)] border border-[var(--border-gold)]" 
+                                            : "text-[var(--text-mid)] hover:text-[var(--gold2)] hover:bg-white/5"
+                                    }`}
+                                >
+                                    {lang.name}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
+
+                {/* Theme Toggle (Minimalist) */}
+                <button 
+                    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                    className="p-2 border border-[var(--border-dim)] rounded-full text-[var(--text-dim)] hover:text-[var(--gold2)] hover:border-[var(--border-gold)] transition-all"
+                >
+                    {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                </button>
+
+                {/* Agent Access / CTA */}
+                <Link 
+                    href="/auth" 
+                    className="nav-cta hidden sm:block"
+                >
+                    Agent Access
+                </Link>
             </div>
         </nav>
     );
