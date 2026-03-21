@@ -2,14 +2,18 @@
 
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 
 const Footer: React.FC = () => {
     const { t } = useLanguage();
+    const pathname = usePathname();
+
+    if (pathname === "/fir-report" || pathname === "/chat") return null;
     
     return (
-        <footer className="relative z-10 border-t border-[var(--border-gold)] bg-[rgba(8,11,26,0.80)] backdrop-blur-[24px] py-12 px-6 md:px-12 flex flex-col gap-8">
-            <div className="flex flex-col md:flex-row justify-between items-start gap-8">
+        <footer className="relative z-10 border-t border-[var(--border-gold)] bg-[rgba(8,11,26,0.80)] backdrop-blur-[24px] py-5 px-6 md:px-12 flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                 <div>
                     <div className="nav-logo text-2xl mb-2">TruthGuard</div>
                     <p className="font-serif italic text-xs text-[var(--text-dim)] max-w-xs leading-[1.7]">

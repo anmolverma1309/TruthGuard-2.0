@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TruthGuard — FIR Report Assistance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:       #080b1a;
+  --bg2:      #0c1024;
+  --surface:  #11162c;
+  --surface2: #181f3d;
+  --border:   rgba(0, 229, 255, 0.15);
+  --border2:  rgba(0, 229, 255, 0.3);
+  --accent:   #00E5FF;
+  --accent2:  #B026FF;
+  --blue:     #3d8ef0;
+  --teal:     #00E5FF;
+  --red:      #ff4f4f;
+  --text:     rgba(255,255,255,0.9);
+  --muted:    #6e80a5;
+  --muted2:   #8fa1c4;
+  --white:    #ffffff;
+  --mono:     'DM Mono', monospace;
+  --display:  'Rajdhani', sans-serif;
+  --body:     'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.65;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════
+   GRID BG
+═══════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(61,142,240,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61,142,240,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════
+   NAV
+═══════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(6,9,17,0.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--display); font-size: 20px; font-weight: 700;
+  color: var(--white); letter-spacing: 0.03em;
+}
+.nav-brand .dot { color: var(--accent); }
+.nav-pill {
+  background: rgba(232,100,58,0.15);
+  border: 1px solid rgba(232,100,58,0.3);
+  color: var(--accent);
+  font-family: var(--mono); font-size: 11px;
+  padding: 3px 10px; border-radius: 20px;
+  letter-spacing: 0.06em;
+}
+.nav-back {
+  background: rgba(179,139,45,0.12);
+  border: 1px solid rgba(179,139,45,0.35);
+  color: #d4a843;
+  font-size: 13px;
+  padding: 8px 20px; 
+  border-radius: 9999px;
+  cursor: pointer; 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  font-style: italic;
+  font-weight: 500;
+  box-shadow: 0 0 15px rgba(212,168,67,0.15);
+}
+.nav-back:hover { 
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(212,168,67,0.35);
+  border-color: rgba(179,139,45,0.8);
+  color: #fceea7;
+}
+
+/* ═══════════════════════════════
+   HERO
+═══════════════════════════════ */
+.hero {
+  position: relative; z-index: 1;
+  padding: 120px 32px 64px;
+  text-align: center;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(232,100,58,0.1) 0%, transparent 70%);
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(232,100,58,0.1); border: 1px solid rgba(232,100,58,0.25);
+  color: var(--accent2); font-family: var(--mono); font-size: 11px;
+  padding: 5px 14px; border-radius: 20px; margin-bottom: 24px;
+  letter-spacing: 0.08em;
+  animation: fadeUp 0.6s ease both;
+}
+.hero-eyebrow::before { content: '🛡️'; }
+
+.hero h1 {
+  font-family: var(--display);
+  font-size: clamp(32px, 6vw, 64px);
+  font-weight: 700;
+  line-height: 1.0;
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+  animation: fadeUp 0.6s ease 0.1s both;
+}
+.hero h1 .line2 { color: var(--accent); display: block; }
+
+.hero p {
+  color: var(--muted2); max-width: 520px; margin: 0 auto 40px;
+  font-size: 15px; font-weight: 300;
+  animation: fadeUp 0.6s ease 0.2s both;
+}
+
+/* ═══════════════════════════════
+   STEP PROGRESS
+═══════════════════════════════ */
+.stepper {
+  display: flex; justify-content: center; align-items: center;
+  gap: 0; margin-bottom: 48px;
+  animation: fadeUp 0.6s ease 0.3s both;
+}
+.step-item {
+  display: flex; align-items: center; gap: 0;
+}
+.step-circle {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 2px solid var(--border2);
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 12px; color: var(--muted);
+  transition: all .35s ease;
+  cursor: default; flex-shrink: 0;
+  position: relative; z-index: 1;
+}
+.step-circle.active {
+  border-color: var(--accent);
+  background: rgba(232,100,58,0.15);
+  color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(232,100,58,0.12);
+}
+.step-circle.done {
+  border-color: var(--teal);
+  background: rgba(43,191,164,0.15);
+  color: var(--teal);
+}
+.step-line {
+  width: 48px; height: 2px;
+  background: var(--border);
+  transition: background .35s;
+}
+.step-line.done { background: var(--teal); }
+.step-label {
+  position: absolute; top: 44px; left: 50%; transform: translateX(-50%);
+  font-size: 10px; color: var(--muted); white-space: nowrap;
+  font-family: var(--mono); letter-spacing: 0.04em;
+}
+.step-circle { position: relative; }
+
+/* ═══════════════════════════════
+   MAIN LAYOUT
+═══════════════════════════════ */
+.main {
+  position: relative; z-index: 1;
+  max-width: 860px; margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+/* ═══════════════════════════════
+   PANELS
+═══════════════════════════════ */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 20px;
+  animation: fadeUp 0.5s ease both;
+  display: none;
+}
+.panel.visible { display: block; }
+
+.panel-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 24px;
+}
+.panel-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.panel-icon.orange { background: rgba(232,100,58,0.15); }
+.panel-icon.blue   { background: rgba(61,142,240,0.15); }
+.panel-icon.teal   { background: rgba(43,191,164,0.15); }
+.panel-icon.red    { background: rgba(232,64,64,0.15); }
+
+.panel-header h2 {
+  font-family: var(--display); font-size: 22px; font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.panel-header p { color: var(--muted2); font-size: 13px; margin-top: 2px; }
+
+/* ═══════════════════════════════
+   CONSENT
+═══════════════════════════════ */
+.consent-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.consent-box h3 {
+  font-family: var(--display); font-size: 16px; font-weight: 600;
+  margin-bottom: 10px; color: var(--text);
+}
+.consent-list { list-style: none; }
+.consent-list li {
+  padding: 6px 0; color: var(--muted2); font-size: 13.5px;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.consent-list li::before {
+  content: '→';
+  color: var(--accent); flex-shrink: 0; margin-top: 1px;
+  font-family: var(--mono);
+}
+
+.checkbox-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: rgba(232,100,58,0.06); border: 1px solid rgba(232,100,58,0.2);
+  border-radius: 10px; padding: 14px 16px; cursor: pointer;
+  transition: all .2s; margin-bottom: 12px;
+}
+.checkbox-row:hover { border-color: rgba(232,100,58,0.4); }
+.checkbox-row input[type=checkbox] { width: 18px; height: 18px; margin-top: 1px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+.cb-text { color: var(--text); font-size: 14px; cursor: pointer; line-height: 1.5; }
+.cb-text span { color: var(--muted2); font-size: 12px; display: block; margin-top: 2px; }
+
+/* ═══════════════════════════════
+   FORM
+═══════════════════════════════ */
+.form-grid { display: grid; gap: 16px; }
+.form-grid-2 { grid-template-columns: 1fr 1fr; }
+@media(max-width:580px){ .form-grid-2 { grid-template-columns: 1fr; } }
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label {
+  font-family: var(--mono); font-size: 11px; color: var(--muted2);
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.form-group label .req { color: var(--accent); margin-left: 3px; }
+.form-group label .opt { color: var(--muted); font-size: 10px; margin-left: 4px; text-transform: none; letter-spacing: 0; }
+
+input[type=text], input[type=tel], input[type=email], select {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 12px 16px;
+  color: var(--text); font-family: var(--body); font-size: 14px;
+  transition: border-color .2s, box-shadow .2s;
+  outline: none; width: 100%;
+}
+input:focus, select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(232,100,58,0.12);
+}
+input::placeholder { color: var(--muted); }
+select { cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6a8a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+  padding-right: 36px;
+}
+select option { background: var(--surface2); }
+
+/* ═══════════════════════════════
+   LOCATION MODULE
+═══════════════════════════════ */
+.loc-methods {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  margin-bottom: 20px;
+}
+@media(max-width:480px){ .loc-methods { grid-template-columns: 1fr; } }
+
+.loc-method {
+  background: var(--bg2); border: 2px solid var(--border);
+  border-radius: 12px; padding: 18px;
+  cursor: pointer; transition: all .25s;
+  text-align: center;
+}
+.loc-method:hover { border-color: var(--border2); }
+.loc-method.selected { border-color: var(--accent); background: rgba(232,100,58,0.07); }
+.loc-method .m-icon { font-size: 28px; margin-bottom: 8px; }
+.loc-method h4 { font-family: var(--display); font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.loc-method p { color: var(--muted2); font-size: 12px; }
+
+.loc-gps-status {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+  margin-top: 12px; display: none;
+}
+.loc-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--muted); flex-shrink: 0;
+  transition: background .3s;
+}
+.loc-dot.searching { background: var(--accent2); animation: pulse 1s infinite; }
+.loc-dot.found { background: var(--teal); }
+.loc-dot.error { background: var(--red); }
+
+/* ═══════════════════════════════
+   BUTTONS
+═══════════════════════════════ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 13px 28px;
+  border-radius: 10px; font-family: var(--display); font-size: 16px;
+  font-weight: 600; letter-spacing: 0.04em;
+  cursor: pointer; border: none; transition: all .25s;
+  text-decoration: none; white-space: nowrap;
+}
+.btn-primary {
+  background: var(--accent); color: white;
+  box-shadow: 0 4px 20px rgba(232,100,58,0.35);
+}
+.btn-primary:hover { background: #f07040; transform: translateY(-1px); box-shadow: 0 6px 28px rgba(232,100,58,0.45); }
+.btn-primary:active { transform: translateY(0); }
+.btn-secondary {
+  background: var(--surface2); color: var(--text);
+  border: 1px solid var(--border2);
+}
+.btn-secondary:hover { border-color: var(--border2); background: var(--bg2); }
+.btn-outline {
+  background: transparent; color: var(--accent);
+  border: 1.5px solid var(--accent);
+}
+.btn-outline:hover { background: rgba(232,100,58,0.1); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+
+.btn-row {
+  display: flex; gap: 12px; margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+.btn-sm { padding: 8px 16px; font-size: 13px; border-radius: 8px; }
+
+/* ═══════════════════════════════
+   RESULTS
+═══════════════════════════════ */
+.results-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+@media(max-width:640px){ .results-grid { grid-template-columns: 1fr; } }
+
+/* STATION CARD */
+.station-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 22px;
+  position: relative; overflow: hidden;
+  transition: border-color .2s;
+}
+.station-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+}
+.station-card:hover { border-color: var(--border2); }
+
+.station-dist {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(43,191,164,0.12); border: 1px solid rgba(43,191,164,0.25);
+  color: var(--teal); font-family: var(--mono); font-size: 11px;
+  padding: 3px 10px; border-radius: 20px; margin-bottom: 10px;
+}
+.station-name {
+  font-family: var(--display); font-size: 18px; font-weight: 700;
+  margin-bottom: 6px; line-height: 1.2;
+}
+.station-addr { color: var(--muted2); font-size: 13px; margin-bottom: 12px; line-height: 1.5; }
+.station-ph {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--blue); font-family: var(--mono); font-size: 14px;
+  margin-bottom: 14px;
+}
+.station-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.s-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 8px; font-size: 12px;
+  cursor: pointer; border: 1px solid; transition: all .2s;
+  font-family: var(--body); font-weight: 500;
+  text-decoration: none;
+}
+.s-btn-call { background: rgba(43,191,164,0.1); border-color: rgba(43,191,164,0.3); color: var(--teal); }
+.s-btn-call:hover { background: rgba(43,191,164,0.2); }
+.s-btn-map { background: rgba(61,142,240,0.1); border-color: rgba(61,142,240,0.3); color: var(--blue); }
+.s-btn-map:hover { background: rgba(61,142,240,0.2); }
+.s-btn-fir { background: rgba(232,100,58,0.1); border-color: rgba(232,100,58,0.3); color: var(--accent); }
+.s-btn-fir:hover { background: rgba(232,100,58,0.2); }
+
+/* HELPLINE CARDS */
+.helplines-section { grid-column: 1 / -1; }
+.helplines-title {
+  font-family: var(--display); font-size: 16px; font-weight: 700;
+  letter-spacing: 0.04em; color: var(--muted2);
+  text-transform: uppercase; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.helplines-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.helplines-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.helpline-card {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 6px;
+  transition: border-color .2s, transform .2s;
+  cursor: default;
+}
+.helpline-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.hl-icon-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.hl-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.hl-badge {
+  font-family: var(--mono); font-size: 9px; color: var(--teal);
+  background: rgba(43,191,164,0.1); border: 1px solid rgba(43,191,164,0.2);
+  padding: 2px 7px; border-radius: 10px; letter-spacing: 0.04em;
+}
+.hl-name { font-family: var(--display); font-size: 15px; font-weight: 700; }
+.hl-number {
+  font-family: var(--mono); font-size: 26px; font-weight: 500;
+  line-height: 1; letter-spacing: -0.02em;
+}
+.hl-desc { color: var(--muted2); font-size: 12px; line-height: 1.4; }
+.hl-call {
+  margin-top: 6px; display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; padding: 5px 12px; border-radius: 6px;
+  cursor: pointer; border: 1px solid; transition: all .2s;
+  font-family: var(--body); text-decoration: none; align-self: flex-start;
+}
+
+/* ═══════════════════════════════
+   ONLINE SERVICES
+═══════════════════════════════ */
+.online-services {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px; margin-top: 20px;
+}
+.online-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px;
+  display: flex; gap: 14px; align-items: flex-start;
+  transition: border-color .2s;
+}
+.online-card:hover { border-color: var(--border2); }
+.online-icon {
+  width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.online-card h4 { font-family: var(--display); font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.online-card p { color: var(--muted2); font-size: 12px; line-height: 1.45; margin-bottom: 8px; }
+.online-card a {
+  color: var(--blue); font-size: 12px; font-family: var(--mono);
+  text-decoration: none; transition: color .2s;
+}
+.online-card a:hover { color: #70b0ff; text-decoration: underline; }
+
+/* ═══════════════════════════════
+   FIR GUIDE
+═══════════════════════════════ */
+.guide-steps {
+  counter-reset: guide;
+  display: flex; flex-direction: column; gap: 0;
+}
+.guide-step {
+  display: flex; gap: 16px; padding: 14px 0;
+  border-bottom: 1px solid var(--border); position: relative;
+}
+.guide-step:last-child { border-bottom: none; }
+.guide-num {
+  counter-increment: guide;
+  width: 32px; height: 32px; border-radius: 8px;
+  background: rgba(232,100,58,0.12); border: 1px solid rgba(232,100,58,0.25);
+  color: var(--accent); font-family: var(--mono); font-size: 13px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  font-weight: 500;
+}
+.guide-step h4 { font-family: var(--display); font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+.guide-step p { color: var(--muted2); font-size: 13px; }
+
+/* ═══════════════════════════════
+   DISCLAIMER
+═══════════════════════════════ */
+.disclaimer {
+  background: rgba(232,100,58,0.05); border: 1px solid rgba(232,100,58,0.18);
+  border-radius: 10px; padding: 14px 18px;
+  color: var(--muted2); font-size: 12.5px; line-height: 1.55;
+  margin-top: 16px;
+  display: flex; gap: 10px;
+}
+.disclaimer::before { content: 'ⓘ'; color: var(--accent2); flex-shrink: 0; font-size: 16px; }
+
+/* ═══════════════════════════════
+   LOADING SPINNER
+═══════════════════════════════ */
+.spinner {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  animation: spin 0.7s linear infinite; flex-shrink: 0;
+}
+
+/* ═══════════════════════════════
+   TOAST
+═══════════════════════════════ */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 999;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 12px; padding: 14px 20px;
+  font-size: 13.5px; max-width: 300px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  animation: slideIn 0.3s ease;
+  display: none;
+}
+.toast.show { display: flex; align-items: center; gap: 10px; }
+.toast.success { border-color: rgba(43,191,164,0.4); }
+.toast.error { border-color: rgba(232,64,64,0.4); }
+
+/* ═══════════════════════════════
+   DIVIDER
+═══════════════════════════════ */
+.divider { height: 1px; background: var(--border); margin: 24px 0; }
+.section-sub {
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 14px;
+}
+
+/* ═══════════════════════════════
+   ANIMATIONS
+═══════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+@keyframes slideIn {
+  from { transform: translateX(20px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+/* ═══════════════════════════════
+   RESPONSIVE
+═══════════════════════════════ */
+@media(max-width: 600px) {
+  nav { padding: 0 16px; }
+  .hero { padding: 100px 16px 48px; }
+  .main { padding: 0 16px 60px; }
+  .panel { padding: 20px; }
+  .btn-row { flex-direction: column; }
+  .btn-row .btn { width: 100%; }
+  .results-grid { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════
+   SUMMARY BOX
+═══════════════════════════════ */
+.summary-box {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 22px;
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 20px;
+}
+.summary-box .s-avatar {
+  width: 46px; height: 46px; border-radius: 12px;
+  background: rgba(232,100,58,0.15); border: 1px solid rgba(232,100,58,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.summary-box h3 { font-family: var(--display); font-size: 18px; font-weight: 700; margin-bottom: 2px; }
+.summary-box p { color: var(--muted2); font-size: 13px; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.tag {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em;
+  padding: 3px 9px; border-radius: 6px; border: 1px solid;
+}
+.tag-loc { color: var(--teal); border-color: rgba(43,191,164,0.3); background: rgba(43,191,164,0.08); }
+.tag-consent { color: var(--accent2); border-color: rgba(240,160,80,0.3); background: rgba(240,160,80,0.08); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">TRUTH<span class="dot">·</span>GUARD</div>
+  <div class="nav-pill">FIR ASSIST</div>
+  <button class="nav-back" onclick="window.location.href='/'">← Back to App</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">FIR Report Assistance Module</div>
+  <h1>Get Help.<br><span class="line2">File a Report.</span></h1>
+  <p>We'll find your nearest police station and connect you with the right helplines — in seconds.</p>
+
+  <!-- STEPPER -->
+  <div class="stepper" id="stepper">
+    <div class="step-item">
+      <div class="step-circle active" id="sc1">1<span class="step-label">Consent</span></div>
+    </div>
+    <div class="step-line" id="sl1"></div>
+    <div class="step-item">
+      <div class="step-circle" id="sc2">2<span class="step-label">Profile</span></div>
+    </div>
+    <div class="step-line" id="sl2"></div>
+    <div class="step-item">
+      <div class="step-circle" id="sc3">3<span class="step-label">Location</span></div>
+    </div>
+    <div class="step-line" id="sl3"></div>
+    <div class="step-item">
+      <div class="step-circle" id="sc4">4<span class="step-label">Results</span></div>
+    </div>
+    <div class="step-line" id="sl4"></div>
+    <div class="step-item">
+      <div class="step-circle" id="sc5">5<span class="step-label">FIR Guide</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ── STEP 1: CONSENT ── -->
+  <div class="panel visible" id="panel1" style="animation-delay:0.1s">
+    <div class="panel-header">
+      <div class="panel-icon orange">🔒</div>
+      <div>
+        <h2>Privacy & Consent</h2>
+        <p>We need a few permissions before we begin</p>
+      </div>
+    </div>
+
+    <div class="consent-box">
+      <h3>What we collect & why</h3>
+      <ul class="consent-list">
+        <li>Your <strong>name</strong> (display only — never shared)</li>
+        <li>Your <strong>location</strong> (city or GPS) to find the nearest station</li>
+        <li>Optional contact info — used only for FIR reference</li>
+        <li>Data is auto-deleted after <strong>90 days</strong></li>
+        <li>We never sell or share your data with third parties</li>
+      </ul>
+    </div>
+
+    <label class="checkbox-row" for="cb1">
+      <input type="checkbox" id="cb1">
+      <span class="cb-text">
+        I consent to TruthGuard collecting my name and location to provide FIR assistance
+        <span>This is required to use the service. You can withdraw consent and delete your data at any time.</span>
+      </span>
+    </label>
+    <label class="checkbox-row" for="cb2">
+      <input type="checkbox" id="cb2">
+      <span class="cb-text">
+        I understand this tool provides AI-assisted guidance and does not replace professional legal advice
+        <span>Always consult a legal professional for serious matters.</span>
+      </span>
+    </label>
+
+    <div class="disclaimer">
+      This tool is compliant with India's Digital Personal Data Protection Act 2023. Your data stays within India and is encrypted at rest.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goStep(2)">Accept & Continue →</button>
+      <button class="btn btn-secondary" onclick="skipConsent()">View Helplines Only (No Data Shared)</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 2: PROFILE ── -->
+  <div class="panel" id="panel2">
+    <div class="panel-header">
+      <div class="panel-icon blue">👤</div>
+      <div>
+        <h2>Your Profile</h2>
+        <p>Minimal info — only what's needed</p>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label>Full Name <span class="req">*</span></label>
+          <input type="text" id="inp-name" placeholder="e.g. Priya Sharma">
+        </div>
+        <div class="form-group">
+          <label>Mobile Number <span class="opt">(optional)</span></label>
+          <input type="tel" id="inp-mobile" placeholder="+91 98765 43210">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email <span class="opt">(optional — for PDF report)</span></label>
+        <input type="email" id="inp-email" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label>Nature of Incident <span class="req">*</span></label>
+        <select id="inp-incident">
+          <option value="">Select incident type…</option>
+          <option>Online Fraud / Financial Scam</option>
+          <option>Cyberbullying / Harassment</option>
+          <option>Misinformation / Defamation</option>
+          <option>Deepfake / Image Misuse</option>
+          <option>Domestic Violence</option>
+          <option>Child Abuse / Missing Child</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="disclaimer" style="margin-top:20px">
+      Your name and incident type are used only to personalise your FIR guide. Mobile and email are entirely optional.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveProfile()">Save & Continue →</button>
+      <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 3: LOCATION ── -->
+  <div class="panel" id="panel3">
+    <div class="panel-header">
+      <div class="panel-icon teal">📍</div>
+      <div>
+        <h2>Your Location</h2>
+        <p>Enter your city to find the nearest police station</p>
+      </div>
+    </div>
+
+    <div class="form-grid" style="margin-bottom:16px">
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label>City / District <span class="req">*</span></label>
+          <input type="text" id="inp-city" placeholder="e.g. Ghaziabad, Bandra, Koramangala…" oninput="suggestCity(this.value)">
+          <div id="city-suggestions" style="display:none; background:var(--bg2); border:1px solid var(--border2); border-radius:8px; margin-top:4px; overflow:hidden;"></div>
+        </div>
+        <div class="form-group">
+          <label>State <span class="req">*</span></label>
+          <select id="inp-state">
+            <option value="">Select state…</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Assam">Assam</option>
+            <option value="Bihar">Bihar</option>
+            <option value="Chhattisgarh">Chhattisgarh</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Haryana">Haryana</option>
+            <option value="Himachal Pradesh">Himachal Pradesh</option>
+            <option value="Jharkhand">Jharkhand</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Odisha">Odisha</option>
+            <option value="Punjab">Punjab</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Telangana">Telangana</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Uttarakhand">Uttarakhand</option>
+            <option value="West Bengal">West Bengal</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Pincode <span class="opt">(optional — improves accuracy)</span></label>
+        <input type="text" id="inp-pincode" placeholder="e.g. 201001" maxlength="6" oninput="this.value=this.value.replace(/\D/g,'')">
+      </div>
+    </div>
+
+    <div id="loc-preview" style="display:none; margin-bottom:16px;">
+      <div class="loc-gps-status" style="display:flex;">
+        <div class="loc-dot found"></div>
+        <span id="loc-preview-text">Location set</span>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="loc-next-btn" onclick="processLocation()">Find Nearest Station →</button>
+      <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 4: RESULTS ── -->
+  <div class="panel" id="panel4">
+    <div class="panel-header">
+      <div class="panel-icon teal">🗺️</div>
+      <div>
+        <h2>Your Results</h2>
+        <p id="results-sub">Based on your location</p>
+      </div>
+    </div>
+
+    <!-- User summary -->
+    <div class="summary-box" id="user-summary" style="display:none">
+      <div class="s-avatar">👤</div>
+      <div>
+        <h3 id="summary-name">—</h3>
+        <p id="summary-incident">—</p>
+        <div class="tag-row">
+          <span class="tag tag-consent">✓ Consent given</span>
+          <span class="tag tag-loc" id="summary-loc">📍 —</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Station cards -->
+    <div class="section-sub">📍 Nearest Police Stations</div>
+    <div id="stations-container" class="results-grid" style="margin-bottom:28px"></div>
+
+    <!-- Helplines (always shown) -->
+    <div class="helplines-section">
+      <div class="helplines-title">Emergency Helplines</div>
+      <div class="helplines-grid" id="helplines-container"></div>
+    </div>
+
+    <!-- Online services -->
+    <div class="divider"></div>
+    <div class="section-sub">💻 Online Services</div>
+    <div class="online-services" id="online-container"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goStep(5)">FIR Filing Guide →</button>
+      <button class="btn btn-outline btn-sm" onclick="downloadPDF()">⬇ Download PDF Report</button>
+      <button class="btn btn-secondary btn-sm" onclick="shareResult()">↗ Share</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 5: FIR GUIDE ── -->
+  <div class="panel" id="panel5">
+    <div class="panel-header">
+      <div class="panel-icon orange">📋</div>
+      <div>
+        <h2>FIR Filing Guide</h2>
+        <p id="guide-sub">Step-by-step process</p>
+      </div>
+    </div>
+
+    <div class="guide-steps">
+      <div class="guide-step">
+        <div class="guide-num">1</div>
+        <div>
+          <h4>Gather Your Documents</h4>
+          <p>Collect your Aadhar / government ID, screenshots of the incident, transaction records (if fraud), and any chat messages or email evidence.</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">2</div>
+        <div>
+          <h4>Visit the Nearest Station (or File Online)</h4>
+          <p>Go to the station we've found for you, or file at <strong>cybercrime.gov.in</strong> for cyber offences. Mention you want to "lodge an FIR" — not just a complaint.</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">3</div>
+        <div>
+          <h4>Describe the Incident Clearly</h4>
+          <p>State the date, time, location of incident, what happened, and any accused/account details. Be factual and sequential. The officer will record your statement.</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">4</div>
+        <div>
+          <h4>Receive Your FIR Copy (Free of Cost)</h4>
+          <p>Under Section 154 CrPC, you are entitled to a free copy of your FIR. Insist on this. Note the FIR number — you'll need it to track the case.</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">5</div>
+        <div>
+          <h4>If Police Refuse to File</h4>
+          <p>You can approach the Superintendent of Police (SP) or file a complaint before a Magistrate under Section 156(3) CrPC. Contact the <strong>Women Helpline (1091)</strong> for gender-based cases.</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-num">6</div>
+        <div>
+          <h4>Track Your Case</h4>
+          <p>Use your state police portal or the National Cyber Crime Reporting Portal to track the status. Keep a copy of all communication.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="disclaimer" style="margin-top:20px">
+      <span>This guide provides general procedural information only. For legal advice specific to your situation, consult a qualified advocate. TruthGuard is not liable for case outcomes.</span>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goStep(4)">← View Results</button>
+      <button class="btn btn-outline" onclick="clearData()">🗑 Clear My Data</button>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+// ═══════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════
+const HELPLINES = [
+  { id: 'women', name: 'Women Helpline', number: '1091', desc: 'Domestic violence, harassment, distress', icon: '👩', color: 'rgba(239,68,68,0.15)', textColor: '#f87171', badge: '24×7' },
+  { id: 'child', name: 'Childline India', number: '1098', desc: 'Child abuse, missing children, trafficking', icon: '👶', color: 'rgba(59,130,246,0.15)', textColor: '#60a5fa', badge: '24×7' },
+  { id: 'cyber', name: 'Cyber Crime', number: '1930', desc: 'Online fraud, deepfakes, social media crimes', icon: '💻', color: 'rgba(245,158,11,0.15)', textColor: '#fbbf24', badge: '24×7' },
+  { id: 'police', name: 'National Emergency', number: '112', desc: 'Police · Fire · Ambulance — unified number', icon: '🚨', color: 'rgba(16,185,129,0.15)', textColor: '#34d399', badge: '24×7' },
+];
+
+const ONLINE_SERVICES = [
+  { name: 'National Cyber Crime Portal', desc: 'File cyber crime complaints online — fraud, deepfakes, social media abuse', url: 'https://cybercrime.gov.in', icon: '🌐', iconBg: 'rgba(61,142,240,0.15)' },
+  { name: 'e-FIR Portal', desc: 'Many states allow online FIR filing for select offences. Check your state portal.', url: '#', icon: '📝', iconBg: 'rgba(232,100,58,0.15)' },
+  { name: 'National Commission for Women', desc: 'File complaints related to gender-based violence and harassment', url: 'https://ncwapps.nic.in', icon: '👩‍⚖️', iconBg: 'rgba(239,68,68,0.15)' },
+  { name: 'POCSO e-Box', desc: 'Report child sexual abuse material online — anonymous reporting available', url: 'https://ncpcr.gov.in', icon: '🛡️', iconBg: 'rgba(43,191,164,0.15)' },
+];
+
+// Extended city → coords database for personalized results
+const CITY_COORDS = {
+  // UP / NCR
+  'ghaziabad':    { lat: 28.6692, lng: 77.4538, state: 'Uttar Pradesh' },
+  'noida':        { lat: 28.5355, lng: 77.3910, state: 'Uttar Pradesh' },
+  'lucknow':      { lat: 26.8467, lng: 80.9462, state: 'Uttar Pradesh' },
+  'kanpur':       { lat: 26.4499, lng: 80.3319, state: 'Uttar Pradesh' },
+  'agra':         { lat: 27.1767, lng: 78.0081, state: 'Uttar Pradesh' },
+  'varanasi':     { lat: 25.3176, lng: 82.9739, state: 'Uttar Pradesh' },
+  'meerut':       { lat: 28.9845, lng: 77.7064, state: 'Uttar Pradesh' },
+  'allahabad':    { lat: 25.4358, lng: 81.8463, state: 'Uttar Pradesh' },
+  'prayagraj':    { lat: 25.4358, lng: 81.8463, state: 'Uttar Pradesh' },
+  // Delhi
+  'new delhi':    { lat: 28.6139, lng: 77.2090, state: 'Delhi' },
+  'delhi':        { lat: 28.6139, lng: 77.2090, state: 'Delhi' },
+  'dwarka':       { lat: 28.5921, lng: 77.0460, state: 'Delhi' },
+  'rohini':       { lat: 28.7450, lng: 77.1090, state: 'Delhi' },
+  'lajpat nagar': { lat: 28.5672, lng: 77.2396, state: 'Delhi' },
+  'connaught place': { lat: 28.6315, lng: 77.2167, state: 'Delhi' },
+  'vasant kunj':  { lat: 28.5294, lng: 77.1589, state: 'Delhi' },
+  // Maharashtra
+  'mumbai':       { lat: 19.0760, lng: 72.8777, state: 'Maharashtra' },
+  'bandra':       { lat: 19.0596, lng: 72.8295, state: 'Maharashtra' },
+  'andheri':      { lat: 19.1197, lng: 72.8469, state: 'Maharashtra' },
+  'pune':         { lat: 18.5204, lng: 73.8567, state: 'Maharashtra' },
+  'nagpur':       { lat: 21.1458, lng: 79.0882, state: 'Maharashtra' },
+  'nashik':       { lat: 19.9975, lng: 73.7898, state: 'Maharashtra' },
+  'thane':        { lat: 19.2183, lng: 72.9781, state: 'Maharashtra' },
+  // Karnataka
+  'bengaluru':    { lat: 12.9716, lng: 77.5946, state: 'Karnataka' },
+  'bangalore':    { lat: 12.9716, lng: 77.5946, state: 'Karnataka' },
+  'mg road':      { lat: 12.9747, lng: 77.6105, state: 'Karnataka' },
+  'koramangala':  { lat: 12.9352, lng: 77.6245, state: 'Karnataka' },
+  'jp nagar':     { lat: 12.9073, lng: 77.5833, state: 'Karnataka' },
+  'mysuru':       { lat: 12.2958, lng: 76.6394, state: 'Karnataka' },
+  'hubli':        { lat: 15.3647, lng: 75.1240, state: 'Karnataka' },
+  // Tamil Nadu
+  'chennai':      { lat: 13.0827, lng: 80.2707, state: 'Tamil Nadu' },
+  'anna nagar':   { lat: 13.0850, lng: 80.2101, state: 'Tamil Nadu' },
+  'coimbatore':   { lat: 11.0168, lng: 76.9558, state: 'Tamil Nadu' },
+  'madurai':      { lat: 9.9252,  lng: 78.1198, state: 'Tamil Nadu' },
+  'tiruchirappalli': { lat: 10.7905, lng: 78.7047, state: 'Tamil Nadu' },
+  // West Bengal
+  'kolkata':      { lat: 22.5726, lng: 88.3639, state: 'West Bengal' },
+  'park street':  { lat: 22.5531, lng: 88.3534, state: 'West Bengal' },
+  'howrah':       { lat: 22.5958, lng: 88.2636, state: 'West Bengal' },
+  // Telangana
+  'hyderabad':    { lat: 17.3850, lng: 78.4867, state: 'Telangana' },
+  'secunderabad': { lat: 17.4399, lng: 78.4983, state: 'Telangana' },
+  'warangal':     { lat: 17.9784, lng: 79.5941, state: 'Telangana' },
+  // Gujarat
+  'ahmedabad':    { lat: 23.0225, lng: 72.5714, state: 'Gujarat' },
+  'surat':        { lat: 21.1702, lng: 72.8311, state: 'Gujarat' },
+  'vadodara':     { lat: 22.3072, lng: 73.1812, state: 'Gujarat' },
+  // Rajasthan
+  'jaipur':       { lat: 26.9124, lng: 75.7873, state: 'Rajasthan' },
+  'jodhpur':      { lat: 26.2389, lng: 73.0243, state: 'Rajasthan' },
+  'udaipur':      { lat: 24.5854, lng: 73.7125, state: 'Rajasthan' },
+  // Punjab / Haryana
+  'chandigarh':   { lat: 30.7333, lng: 76.7794, state: 'Punjab' },
+  'amritsar':     { lat: 31.6340, lng: 74.8723, state: 'Punjab' },
+  'ludhiana':     { lat: 30.9010, lng: 75.8573, state: 'Punjab' },
+  'gurugram':     { lat: 28.4595, lng: 77.0266, state: 'Haryana' },
+  'faridabad':    { lat: 28.4089, lng: 77.3178, state: 'Haryana' },
+  // Kerala
+  'kochi':        { lat: 9.9312,  lng: 76.2673, state: 'Kerala' },
+  'thiruvananthapuram': { lat: 8.5241, lng: 76.9366, state: 'Kerala' },
+  'kozhikode':    { lat: 11.2588, lng: 75.7804, state: 'Kerala' },
+  // MP / Chhattisgarh
+  'bhopal':       { lat: 23.2599, lng: 77.4126, state: 'Madhya Pradesh' },
+  'indore':       { lat: 22.7196, lng: 75.8577, state: 'Madhya Pradesh' },
+  'raipur':       { lat: 21.2514, lng: 81.6296, state: 'Chhattisgarh' },
+};
+
+// Expanded police stations DB
+const STATIONS_DB = [
+  // Delhi
+  { id: 'DL-CP-001', name: 'Connaught Place PS', address: 'Barakhamba Road, New Delhi - 110001', lat: 28.6315, lng: 77.2167, phone: ['011-23415551', '100'], jurisdiction: 'Central Delhi', state: 'Delhi', online_fir: 'https://delhipolice.gov.in' },
+  { id: 'DL-LB-002', name: 'Lajpat Nagar PS', address: 'Lajpat Nagar II, New Delhi - 110024', lat: 28.5672, lng: 77.2396, phone: ['011-29815000'], jurisdiction: 'South Delhi', state: 'Delhi', online_fir: 'https://delhipolice.gov.in' },
+  { id: 'DL-VK-003', name: 'Vasant Kunj PS', address: 'Vasant Kunj Sector C, New Delhi - 110070', lat: 28.5294, lng: 77.1589, phone: ['011-26892000'], jurisdiction: 'South West Delhi', state: 'Delhi', online_fir: 'https://delhipolice.gov.in' },
+  { id: 'DL-RH-004', name: 'Rohini PS', address: 'Rohini Sector 5, Delhi - 110085', lat: 28.7450, lng: 77.1090, phone: ['011-27555100'], jurisdiction: 'North West Delhi', state: 'Delhi', online_fir: 'https://delhipolice.gov.in' },
+  { id: 'DL-DW-005', name: 'Dwarka PS', address: 'Dwarka Sector 23, New Delhi - 110075', lat: 28.5828, lng: 77.0618, phone: ['011-28044800'], jurisdiction: 'South West Delhi', state: 'Delhi', online_fir: 'https://delhipolice.gov.in' },
+  // UP / Ghaziabad / Noida
+  { id: 'UP-GZB-001', name: 'Kotwali PS Ghaziabad', address: 'Nehru Nagar, Ghaziabad - 201001', lat: 28.6692, lng: 77.4538, phone: ['0120-2824100', '100'], jurisdiction: 'Ghaziabad', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-GZB-002', name: 'Indirapuram PS', address: 'Nyay Khand, Indirapuram, Ghaziabad - 201010', lat: 28.6435, lng: 77.3570, phone: ['0120-4150200'], jurisdiction: 'Ghaziabad East', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-GZB-003', name: 'Crossings Republik PS', address: 'Crossings Republik, Ghaziabad - 201016', lat: 28.6200, lng: 77.4350, phone: ['0120-4154300'], jurisdiction: 'Ghaziabad South', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-GZB-004', name: 'Kavi Nagar PS', address: 'Kavi Nagar, Ghaziabad - 201002', lat: 28.6780, lng: 77.4200, phone: ['0120-2702400'], jurisdiction: 'Ghaziabad City', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-GZB-005', name: 'Vijay Nagar PS', address: 'Vijay Nagar, Ghaziabad - 201009', lat: 28.6610, lng: 77.3980, phone: ['0120-2781100'], jurisdiction: 'Ghaziabad City', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-MRT-001', name: 'Kotwali PS Meerut', address: 'Hapur Road, Meerut - 250001', lat: 28.9845, lng: 77.7064, phone: ['0121-2643100', '100'], jurisdiction: 'Meerut City', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-MRT-002', name: 'Civil Lines PS Meerut', address: 'Civil Lines, Meerut - 250001', lat: 28.9800, lng: 77.6980, phone: ['0121-2661500'], jurisdiction: 'Meerut City', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-MRT-003', name: 'Lisari Gate PS Meerut', address: 'Lisari Gate, Meerut - 250002', lat: 28.9950, lng: 77.7100, phone: ['0121-2655400'], jurisdiction: 'Meerut North', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-ND-001', name: 'Sector 20 PS Noida', address: 'Sector 20, Noida - 201301', lat: 28.5705, lng: 77.3219, phone: ['0120-2440000', '100'], jurisdiction: 'Gautam Buddh Nagar', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-ND-002', name: 'Sector 58 PS Noida', address: 'Sector 58, Noida - 201301', lat: 28.6127, lng: 77.3643, phone: ['0120-2586100'], jurisdiction: 'Gautam Buddh Nagar', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-ND-003', name: 'Sector 39 PS Noida', address: 'Sector 39, Noida - 201303', lat: 28.5640, lng: 77.3510, phone: ['0120-2520100'], jurisdiction: 'Gautam Buddh Nagar', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-LK-001', name: 'Hazratganj PS', address: 'Hazratganj, Lucknow - 226001', lat: 26.8539, lng: 80.9460, phone: ['0522-2237700', '100'], jurisdiction: 'Lucknow Zone', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-LK-002', name: 'Gomti Nagar PS', address: 'Gomti Nagar, Lucknow - 226010', lat: 26.8500, lng: 81.0035, phone: ['0522-4003000'], jurisdiction: 'Lucknow East', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-AG-001', name: 'Taj Ganj PS Agra', address: 'Taj Ganj, Agra - 282001', lat: 27.1750, lng: 78.0420, phone: ['0562-2330100', '100'], jurisdiction: 'Agra City', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  { id: 'UP-KN-001', name: 'Kotwali PS Kanpur', address: 'Mall Road, Kanpur - 208001', lat: 26.4636, lng: 80.3292, phone: ['0512-2310100', '100'], jurisdiction: 'Kanpur City', state: 'Uttar Pradesh', online_fir: 'https://uppolice.gov.in' },
+  // Maharashtra
+  { id: 'MH-BN-001', name: 'Bandra PS', address: 'Bandra (West), Mumbai - 400050', lat: 19.0596, lng: 72.8295, phone: ['022-26421855', '100'], jurisdiction: 'Mumbai Zone 9', state: 'Maharashtra', online_fir: 'https://mumbaipolice.gov.in' },
+  { id: 'MH-AN-002', name: 'Andheri PS', address: 'Andheri (East), Mumbai - 400069', lat: 19.1197, lng: 72.8469, phone: ['022-26830111'], jurisdiction: 'Mumbai Zone 11', state: 'Maharashtra', online_fir: 'https://mumbaipolice.gov.in' },
+  { id: 'MH-MB-003', name: 'Colaba PS', address: 'Colaba, Mumbai - 400005', lat: 18.9220, lng: 72.8347, phone: ['022-22151001'], jurisdiction: 'Mumbai Zone 1', state: 'Maharashtra', online_fir: 'https://mumbaipolice.gov.in' },
+  { id: 'MH-MB-004', name: 'Dadar PS', address: 'Dadar (West), Mumbai - 400028', lat: 19.0178, lng: 72.8478, phone: ['022-24300444'], jurisdiction: 'Mumbai Zone 6', state: 'Maharashtra', online_fir: 'https://mumbaipolice.gov.in' },
+  { id: 'MH-PU-001', name: 'Shivajinagar PS', address: 'Shivajinagar, Pune - 411005', lat: 18.5314, lng: 73.8446, phone: ['020-25532000'], jurisdiction: 'Pune City', state: 'Maharashtra', online_fir: 'https://punepolice.gov.in' },
+  { id: 'MH-PU-002', name: 'Kothrud PS', address: 'Kothrud, Pune - 411038', lat: 18.5074, lng: 73.8077, phone: ['020-25381000'], jurisdiction: 'Pune City', state: 'Maharashtra', online_fir: 'https://punepolice.gov.in' },
+  // Karnataka
+  { id: 'KA-MG-001', name: 'MG Road PS', address: 'MG Road, Bengaluru - 560001', lat: 12.9747, lng: 77.6105, phone: ['080-22943090', '100'], jurisdiction: 'Bengaluru East', state: 'Karnataka', online_fir: 'https://ksp.karnataka.gov.in' },
+  { id: 'KA-JN-002', name: 'JP Nagar PS', address: 'JP Nagar 4th Phase, Bengaluru - 560078', lat: 12.9073, lng: 77.5833, phone: ['080-26583100'], jurisdiction: 'Bengaluru South', state: 'Karnataka', online_fir: 'https://ksp.karnataka.gov.in' },
+  { id: 'KA-KM-003', name: 'Koramangala PS', address: 'Koramangala 4th Block, Bengaluru - 560034', lat: 12.9352, lng: 77.6245, phone: ['080-25636100'], jurisdiction: 'Bengaluru South East', state: 'Karnataka', online_fir: 'https://ksp.karnataka.gov.in' },
+  { id: 'KA-MY-004', name: 'Mysuru City PS', address: 'Devaraja Mohalla, Mysuru - 570001', lat: 12.2958, lng: 76.6394, phone: ['0821-2423030'], jurisdiction: 'Mysuru City', state: 'Karnataka', online_fir: 'https://ksp.karnataka.gov.in' },
+  // Tamil Nadu
+  { id: 'TN-AN-001', name: 'Anna Nagar PS', address: 'Anna Nagar West, Chennai - 600040', lat: 13.0850, lng: 80.2101, phone: ['044-26208100', '100'], jurisdiction: 'Chennai North', state: 'Tamil Nadu', online_fir: 'https://eservices.tnpolice.gov.in' },
+  { id: 'TN-CH-002', name: 'Egmore PS', address: 'Egmore, Chennai - 600008', lat: 13.0736, lng: 80.2609, phone: ['044-28193000'], jurisdiction: 'Chennai Central', state: 'Tamil Nadu', online_fir: 'https://eservices.tnpolice.gov.in' },
+  { id: 'TN-CB-003', name: 'RS Puram PS Coimbatore', address: 'RS Puram, Coimbatore - 641002', lat: 11.0025, lng: 76.9480, phone: ['0422-2541000'], jurisdiction: 'Coimbatore City', state: 'Tamil Nadu', online_fir: 'https://eservices.tnpolice.gov.in' },
+  // West Bengal
+  { id: 'WB-PK-001', name: 'Park Street PS', address: 'Park Street, Kolkata - 700016', lat: 22.5531, lng: 88.3534, phone: ['033-22271000', '100'], jurisdiction: 'Kolkata South', state: 'West Bengal', online_fir: 'https://kolkatapolice.gov.in' },
+  { id: 'WB-HW-002', name: 'Howrah Kotwali PS', address: 'Howrah Station Road, Howrah - 711101', lat: 22.5855, lng: 88.3418, phone: ['033-26413029'], jurisdiction: 'Howrah', state: 'West Bengal', online_fir: 'https://kolkatapolice.gov.in' },
+  // Telangana
+  { id: 'TS-HY-001', name: 'Banjara Hills PS', address: 'Road No. 12, Banjara Hills, Hyderabad - 500034', lat: 17.4156, lng: 78.4347, phone: ['040-27851000'], jurisdiction: 'Hyderabad', state: 'Telangana', online_fir: 'https://tgpolice.gov.in' },
+  { id: 'TS-HY-002', name: 'Cyberabad PS', address: 'Cyberabad, Hyderabad - 500081', lat: 17.4400, lng: 78.3489, phone: ['040-27852000'], jurisdiction: 'Cyberabad', state: 'Telangana', online_fir: 'https://tgpolice.gov.in' },
+  // Gujarat
+  { id: 'GJ-AH-001', name: 'Shahibaug PS', address: 'Shahibaug, Ahmedabad - 380004', lat: 23.0388, lng: 72.5888, phone: ['079-22863081'], jurisdiction: 'Ahmedabad City', state: 'Gujarat', online_fir: 'https://gujaratpolice.gov.in' },
+  { id: 'GJ-AH-002', name: 'Navrangpura PS', address: 'Navrangpura, Ahmedabad - 380009', lat: 23.0261, lng: 72.5549, phone: ['079-26400100'], jurisdiction: 'Ahmedabad City', state: 'Gujarat', online_fir: 'https://gujaratpolice.gov.in' },
+  // Rajasthan
+  { id: 'RJ-JP-001', name: 'Bani Park PS', address: 'Bani Park, Jaipur - 302016', lat: 26.9216, lng: 75.7885, phone: ['0141-2741001'], jurisdiction: 'Jaipur City', state: 'Rajasthan', online_fir: 'https://police.rajasthan.gov.in' },
+  { id: 'RJ-JP-002', name: 'Malviya Nagar PS', address: 'Malviya Nagar, Jaipur - 302017', lat: 26.8638, lng: 75.8137, phone: ['0141-2524001'], jurisdiction: 'Jaipur South', state: 'Rajasthan', online_fir: 'https://police.rajasthan.gov.in' },
+  // Punjab / Chandigarh
+  { id: 'PB-CH-001', name: 'Sector 17 PS Chandigarh', address: 'Sector 17, Chandigarh - 160017', lat: 30.7434, lng: 76.7884, phone: ['0172-2745241'], jurisdiction: 'Chandigarh', state: 'Punjab', online_fir: 'https://chandigarhpolice.gov.in' },
+  { id: 'PB-AM-002', name: 'Kotwali PS Amritsar', address: 'Hall Bazar, Amritsar - 143001', lat: 31.6196, lng: 74.8776, phone: ['0183-2540601'], jurisdiction: 'Amritsar City', state: 'Punjab', online_fir: 'https://punjabpolice.gov.in' },
+  // Haryana
+  { id: 'HR-GG-001', name: 'DLF PS Gurugram', address: 'DLF City Phase 1, Gurugram - 122002', lat: 28.4710, lng: 77.0945, phone: ['0124-2328500'], jurisdiction: 'Gurugram', state: 'Haryana', online_fir: 'https://haryanapolice.gov.in' },
+  // Kerala
+  { id: 'KL-KO-001', name: 'Fort Kochi PS', address: 'Fort Kochi, Kochi - 682001', lat: 9.9650, lng: 76.2430, phone: ['0484-2215855'], jurisdiction: 'Ernakulam', state: 'Kerala', online_fir: 'https://keralapolice.gov.in' },
+  { id: 'KL-TV-002', name: 'Vanchiyoor PS', address: 'Vanchiyoor, Thiruvananthapuram - 695035', lat: 8.5035, lng: 76.9540, phone: ['0471-2318500'], jurisdiction: 'Thiruvananthapuram', state: 'Kerala', online_fir: 'https://keralapolice.gov.in' },
+];
+
+// City suggestions list
+const CITY_NAMES = Object.keys(CITY_COORDS).map(c => c.split(' ').map(w => w[0].toUpperCase()+w.slice(1)).join(' '));
+
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+let state = {
+  step: 1,
+  consent: false,
+  profile: {},
+  location: null,
+  nearestStations: [],
+};
+
+// ═══════════════════════════════════════
+//  STEP NAVIGATION
+// ═══════════════════════════════════════
+function goStep(n) {
+  if (n === 2 && !validateConsent()) return;
+  if (n === 3 && !validateProfile()) return;
+
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('visible'));
+  document.getElementById('panel' + n).classList.add('visible');
+
+  for (let i = 1; i <= 5; i++) {
+    const sc = document.getElementById('sc' + i);
+    sc.classList.remove('active', 'done');
+    if (i < n) sc.classList.add('done');
+    else if (i === n) sc.classList.add('active');
+    if (i < 5) document.getElementById('sl' + i).classList.toggle('done', i < n);
+  }
+
+  state.step = n;
+  if (n === 4) renderResults();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function skipConsent() {
+  state.consent = false;
+  // Jump straight to results with helplines only
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('visible'));
+  document.getElementById('panel4').classList.add('visible');
+  for (let i = 1; i <= 5; i++) {
+    const sc = document.getElementById('sc' + i);
+    sc.classList.remove('active', 'done');
+    if (i < 4) sc.classList.add('done');
+    else if (i === 4) sc.classList.add('active');
+    if (i < 5) document.getElementById('sl' + i).classList.toggle('done', i < 4);
+  }
+  renderResults();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ═══════════════════════════════════════
+//  CONSENT — no toggle() needed, label handles it natively
+// ═══════════════════════════════════════
+function validateConsent() {
+  const cb1 = document.getElementById('cb1').checked;
+  const cb2 = document.getElementById('cb2').checked;
+  if (!cb1 || !cb2) {
+    showToast('⚠️ Please accept both checkboxes to continue', 'error');
+    return false;
+  }
+  state.consent = true;
+  return true;
+}
+
+// ═══════════════════════════════════════
+//  PROFILE
+// ═══════════════════════════════════════
+function saveProfile() {
+  if (!validateProfile()) return;
+  state.profile = {
+    name: document.getElementById('inp-name').value.trim(),
+    mobile: document.getElementById('inp-mobile').value.trim(),
+    email: document.getElementById('inp-email').value.trim(),
+    incident: document.getElementById('inp-incident').value,
+    consent_timestamp: new Date().toISOString(),
+    user_id: crypto.randomUUID(),
+  };
+  showToast('✓ Profile saved', 'success');
+  goStep(3);
+}
+
+function validateProfile() {
+  const name = document.getElementById('inp-name') && document.getElementById('inp-name').value.trim();
+  const incident = document.getElementById('inp-incident') && document.getElementById('inp-incident').value;
+  if (!name) { showToast('⚠️ Please enter your name', 'error'); return false; }
+  if (!incident) { showToast('⚠️ Please select the incident type', 'error'); return false; }
+  return true;
+}
+
+// ═══════════════════════════════════════
+//  CITY AUTOCOMPLETE
+// ═══════════════════════════════════════
+function suggestCity(val) {
+  const box = document.getElementById('city-suggestions');
+  if (!val || val.length < 2) { box.style.display = 'none'; return; }
+  const q = val.toLowerCase();
+  const matches = CITY_NAMES.filter(c => c.toLowerCase().includes(q)).slice(0, 6);
+  if (!matches.length) { box.style.display = 'none'; return; }
+  box.innerHTML = matches.map(m =>
+    `<div onclick="selectCity('${m}')" style="padding:10px 14px;cursor:pointer;font-size:13.5px;border-bottom:1px solid var(--border);transition:background .15s;"
+      onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">${m}</div>`
+  ).join('');
+  box.style.display = 'block';
+}
+
+function selectCity(name) {
+  document.getElementById('inp-city').value = name;
+  document.getElementById('city-suggestions').style.display = 'none';
+  // Auto-fill state from CITY_COORDS
+  const key = name.toLowerCase();
+  const match = CITY_COORDS[key];
+  if (match && match.state) {
+    document.getElementById('inp-state').value = match.state;
+  }
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#inp-city') && !e.target.closest('#city-suggestions')) {
+    const box = document.getElementById('city-suggestions');
+    if (box) box.style.display = 'none';
+  }
+});
+
+// ═══════════════════════════════════════
+//  LOCATION — manual entry only, city-matched coords
+// ═══════════════════════════════════════
+function processLocation() {
+  const cityRaw = document.getElementById('inp-city').value.trim();
+  const st      = document.getElementById('inp-state').value;
+  const pincode = document.getElementById('inp-pincode').value.trim();
+
+  if (!cityRaw) { showToast('⚠️ Please enter your city', 'error'); return; }
+
+  const cityKey = cityRaw.toLowerCase().trim();
+  let coords = null;
+  let resolvedCity = cityRaw;
+
+  // 1. Exact match in CITY_COORDS
+  if (CITY_COORDS[cityKey]) {
+    coords = CITY_COORDS[cityKey];
+  }
+
+  // 2. Starts-with match (e.g. "Ghaziabad" matches "ghaziabad")
+  if (!coords) {
+    const startKey = Object.keys(CITY_COORDS).find(k => k.startsWith(cityKey));
+    if (startKey) { coords = CITY_COORDS[startKey]; resolvedCity = startKey; }
+  }
+
+  // 3. Contains match (e.g. "nagar" finds "lajpat nagar")
+  if (!coords) {
+    const containsKey = Object.keys(CITY_COORDS).find(k => k.includes(cityKey) || cityKey.includes(k));
+    if (containsKey) { coords = CITY_COORDS[containsKey]; resolvedCity = containsKey; }
+  }
+
+  // 4. Pincode prefix lookup — Indian pincode first digit maps to zone
+  if (!coords && pincode.length >= 3) {
+    const PINCODE_COORDS = {
+      '110': { lat: 28.6139, lng: 77.2090, label: 'Delhi' },
+      '201': { lat: 28.6692, lng: 77.4538, label: 'Ghaziabad' },
+      '202': { lat: 27.8974, lng: 78.0880, label: 'Aligarh, UP' },
+      '400': { lat: 19.0760, lng: 72.8777, label: 'Mumbai' },
+      '411': { lat: 18.5204, lng: 73.8567, label: 'Pune' },
+      '560': { lat: 12.9716, lng: 77.5946, label: 'Bengaluru' },
+      '600': { lat: 13.0827, lng: 80.2707, label: 'Chennai' },
+      '700': { lat: 22.5726, lng: 88.3639, label: 'Kolkata' },
+      '500': { lat: 17.3850, lng: 78.4867, label: 'Hyderabad' },
+      '380': { lat: 23.0225, lng: 72.5714, label: 'Ahmedabad' },
+      '302': { lat: 26.9124, lng: 75.7873, label: 'Jaipur' },
+      '160': { lat: 30.7333, lng: 76.7794, label: 'Chandigarh' },
+      '226': { lat: 26.8467, lng: 80.9462, label: 'Lucknow' },
+      '682': { lat:  9.9312, lng: 76.2673, label: 'Kochi' },
+    };
+    const prefix = pincode.slice(0, 3);
+    if (PINCODE_COORDS[prefix]) {
+      coords = PINCODE_COORDS[prefix];
+      resolvedCity = PINCODE_COORDS[prefix].label;
+    }
+  }
+
+  // 5. State-capital fallback (only if nothing else matched)
+  if (!coords && st) {
+    const STATE_CAPITALS = {
+      'Delhi':           { lat: 28.6139, lng: 77.2090 },
+      'Uttar Pradesh':   { lat: 26.8467, lng: 80.9462 },
+      'Maharashtra':     { lat: 19.0760, lng: 72.8777 },
+      'Karnataka':       { lat: 12.9716, lng: 77.5946 },
+      'Tamil Nadu':      { lat: 13.0827, lng: 80.2707 },
+      'West Bengal':     { lat: 22.5726, lng: 88.3639 },
+      'Telangana':       { lat: 17.3850, lng: 78.4867 },
+      'Gujarat':         { lat: 23.0225, lng: 72.5714 },
+      'Rajasthan':       { lat: 26.9124, lng: 75.7873 },
+      'Punjab':          { lat: 30.7333, lng: 76.7794 },
+      'Haryana':         { lat: 28.4595, lng: 77.0266 },
+      'Kerala':          { lat:  9.9312, lng: 76.2673 },
+      'Madhya Pradesh':  { lat: 23.2599, lng: 77.4126 },
+      'Andhra Pradesh':  { lat: 15.9129, lng: 79.7400 },
+      'Bihar':           { lat: 25.5941, lng: 85.1376 },
+      'Odisha':          { lat: 20.2961, lng: 85.8245 },
+      'Chhattisgarh':    { lat: 21.2514, lng: 81.6296 },
+      'Uttarakhand':     { lat: 30.0668, lng: 79.0193 },
+      'Assam':           { lat: 26.2006, lng: 92.9376 },
+      'Jharkhand':       { lat: 23.6102, lng: 85.2799 },
+      'Himachal Pradesh':{ lat: 31.1048, lng: 77.1734 },
+    };
+    coords = STATE_CAPITALS[st] || { lat: 28.6139, lng: 77.2090 };
+    showToast(`ℹ️ City not found — showing nearest stations to ${st} capital`, 'error');
+  }
+
+  // Absolute fallback
+  if (!coords) {
+    coords = { lat: 28.6139, lng: 77.2090 };
+    showToast('⚠️ Location not found — defaulting to Delhi. Please try a major city name.', 'error');
+  }
+
+  const displayCity = cityRaw.split(' ').map(w => w[0].toUpperCase()+w.slice(1)).join(' ');
+  const displayState = st || (coords.state || '');
+
+  state.location = {
+    source: 'manual',
+    city: displayCity,
+    state_name: displayState,
+    pincode: pincode || null,
+    lat: coords.lat,
+    lng: coords.lng,
+  };
+
+  state.nearestStations = findNearest(coords.lat, coords.lng, 3);
+
+  // Show preview with resolved coords for transparency
+  document.getElementById('loc-preview').style.display = 'block';
+  document.getElementById('loc-preview-text').textContent =
+    `✓ ${displayCity}${displayState ? ', ' + displayState : ''}${pincode ? ' – ' + pincode : ''} · ${state.nearestStations.length} stations found · coords (${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)})`;
+
+  showToast('✓ Location found — loading results…', 'success');
+  setTimeout(() => goStep(4), 500);
+}
+
+// ═══════════════════════════════════════
+//  HAVERSINE
+// ═══════════════════════════════════════
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+function toRad(d) { return d * Math.PI / 180; }
+
+function findNearest(lat, lng, n = 3) {
+  return STATIONS_DB
+    .map(s => ({ ...s, distance_km: haversine(lat, lng, s.lat, s.lng) }))
+    .sort((a, b) => a.distance_km - b.distance_km)
+    .slice(0, n);
+}
+
+// ═══════════════════════════════════════
+//  RENDER RESULTS
+// ═══════════════════════════════════════
+function renderResults() {
+  // User summary card
+  if (state.consent && state.profile.name) {
+    const sb = document.getElementById('user-summary');
+    sb.style.display = 'flex';
+    document.getElementById('summary-name').textContent = state.profile.name;
+    document.getElementById('summary-incident').textContent = state.profile.incident || 'General enquiry';
+    const locLabel = state.location
+      ? `${state.location.city}, ${state.location.state_name}`
+      : 'Location not set';
+    document.getElementById('summary-loc').textContent = '📍 ' + locLabel;
+  }
+
+  // Sub heading
+  if (state.location) {
+    document.getElementById('results-sub').textContent =
+      `Nearest stations to ${state.location.city}${state.location.state_name ? ', ' + state.location.state_name : ''}`;
+  } else {
+    document.getElementById('results-sub').textContent = 'Showing national helplines';
+  }
+
+  // Stations
+  const sc = document.getElementById('stations-container');
+  if (state.nearestStations.length > 0) {
+    sc.innerHTML = state.nearestStations.map((s, i) => `
+      <div class="station-card" style="animation: fadeUp 0.4s ease ${i * 0.1}s both">
+        <div class="station-dist">📍 ${s.distance_km.toFixed(1)} km away</div>
+        <div class="station-name">${s.name}</div>
+        <div class="station-addr">${s.address}</div>
+        <div class="station-ph">📞 ${s.phone[0]}</div>
+        <div class="station-actions">
+          <a href="tel:${s.phone[0]}" class="s-btn s-btn-call">📞 Call</a>
+          <a href="https://maps.google.com/?q=${s.lat},${s.lng}" target="_blank" class="s-btn s-btn-map">🗺️ Directions</a>
+          ${s.online_fir ? `<a href="${s.online_fir}" target="_blank" class="s-btn s-btn-fir">📝 Online FIR</a>` : ''}
+        </div>
+      </div>
+    `).join('');
+  } else {
+    sc.innerHTML = `
+      <div class="station-card" style="grid-column:1/-1">
+        <div class="station-name" style="color:var(--muted2)">No stations in our database for this area</div>
+        <div class="station-addr">Call <strong>100</strong> (Police) or <strong>112</strong> (National Emergency) for immediate help. File online at cybercrime.gov.in</div>
+      </div>`;
+  }
+
+  // Helplines
+  document.getElementById('helplines-container').innerHTML = HELPLINES.map(h => `
+    <div class="helpline-card">
+      <div class="hl-icon-row">
+        <div class="hl-icon" style="background:${h.color}">${h.icon}</div>
+        <span class="hl-badge">${h.badge}</span>
+      </div>
+      <div class="hl-name">${h.name}</div>
+      <div class="hl-number" style="color:${h.textColor}">${h.number}</div>
+      <div class="hl-desc">${h.desc}</div>
+      <a href="tel:${h.number}" class="hl-call" style="color:${h.textColor}; border-color:${h.color}; background:${h.color}">
+        📞 Call ${h.number}
+      </a>
+    </div>
+  `).join('');
+
+  // Online services
+  document.getElementById('online-container').innerHTML = ONLINE_SERVICES.map(s => `
+    <div class="online-card">
+      <div class="online-icon" style="background:${s.iconBg}">${s.icon}</div>
+      <div>
+        <h4>${s.name}</h4>
+        <p>${s.desc}</p>
+        <a href="${s.url}" target="_blank">Visit Portal →</a>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('guide-sub').textContent = state.profile.incident
+    ? `Tailored for: ${state.profile.incident}`
+    : 'Step-by-step FIR process';
+}
+
+// ═══════════════════════════════════════
+//  PDF DOWNLOAD — actual working PDF
+// ═══════════════════════════════════════
+function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  if (!jsPDF) { showToast('⚠️ PDF library not loaded yet, please try again', 'error'); return; }
+
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const W = 210, M = 18;
+  let y = M;
+
+  // Header bar
+  doc.setFillColor(232, 100, 58);
+  doc.rect(0, 0, W, 22, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16); doc.setFont('helvetica', 'bold');
+  doc.text('TRUTHGUARD — FIR ASSISTANCE REPORT', M, 14);
+
+  y = 32;
+  doc.setTextColor(30, 30, 60);
+
+  // Generated date
+  doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+  doc.setTextColor(120, 120, 140);
+  doc.text(`Generated: ${new Date().toLocaleString('en-IN')}`, M, y);
+  y += 10;
+
+  // User info section
+  if (state.profile.name) {
+    doc.setFillColor(245, 247, 255);
+    doc.roundedRect(M, y, W - M*2, 28, 3, 3, 'F');
+    doc.setTextColor(50, 50, 80);
+    doc.setFontSize(11); doc.setFont('helvetica', 'bold');
+    doc.text('COMPLAINANT DETAILS', M+5, y+8);
+    doc.setFontSize(10); doc.setFont('helvetica', 'normal');
+    doc.text(`Name: ${state.profile.name}`, M+5, y+16);
+    if (state.profile.mobile) doc.text(`Mobile: ${state.profile.mobile}`, M+80, y+16);
+    doc.text(`Incident: ${state.profile.incident || 'Not specified'}`, M+5, y+23);
+    if (state.profile.email) doc.text(`Email: ${state.profile.email}`, M+80, y+23);
+    y += 35;
+  }
+
+  // Location
+  if (state.location) {
+    doc.setFillColor(235, 248, 244);
+    doc.roundedRect(M, y, W - M*2, 16, 3, 3, 'F');
+    doc.setTextColor(20, 140, 100);
+    doc.setFontSize(10); doc.setFont('helvetica', 'bold');
+    doc.text(`📍 Location: ${state.location.city}, ${state.location.state_name}${state.location.pincode ? ' - ' + state.location.pincode : ''}`, M+5, y+10);
+    y += 22;
+  }
+
+  // Nearest Police Stations
+  doc.setTextColor(30, 30, 60);
+  doc.setFontSize(12); doc.setFont('helvetica', 'bold');
+  doc.text('NEAREST POLICE STATIONS', M, y);
+  doc.setDrawColor(232, 100, 58); doc.setLineWidth(0.5);
+  doc.line(M, y+2, W-M, y+2);
+  y += 10;
+
+  if (state.nearestStations.length > 0) {
+    state.nearestStations.forEach((s, i) => {
+      doc.setFillColor(252, 252, 255);
+      doc.roundedRect(M, y, W-M*2, 32, 2, 2, 'F');
+      doc.setDrawColor(220, 220, 235); doc.setLineWidth(0.3);
+      doc.roundedRect(M, y, W-M*2, 32, 2, 2, 'S');
+
+      doc.setTextColor(232, 100, 58);
+      doc.setFontSize(9); doc.setFont('helvetica', 'bold');
+      doc.text(`#${i+1}  ${s.distance_km.toFixed(1)} km away`, M+5, y+7);
+
+      doc.setTextColor(30, 30, 60);
+      doc.setFontSize(11); doc.setFont('helvetica', 'bold');
+      doc.text(s.name, M+5, y+14);
+
+      doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+      doc.setTextColor(80, 90, 120);
+      doc.text(s.address, M+5, y+20);
+      doc.text(`Phone: ${s.phone.join(' / ')}`, M+5, y+27);
+      if (s.online_fir) {
+        doc.setTextColor(61, 142, 240);
+        doc.text(`Online FIR: ${s.online_fir}`, M+90, y+27);
+      }
+      y += 38;
+    });
+  } else {
+    doc.setFontSize(10); doc.setFont('helvetica', 'normal');
+    doc.setTextColor(120, 120, 140);
+    doc.text('No stations found in database. Call 100 or 112 immediately.', M, y);
+    y += 12;
+  }
+
+  y += 4;
+  // Emergency Helplines
+  doc.setTextColor(30, 30, 60);
+  doc.setFontSize(12); doc.setFont('helvetica', 'bold');
+  doc.text('EMERGENCY HELPLINES', M, y);
+  doc.line(M, y+2, W-M, y+2);
+  y += 10;
+
+  const hlColors = [[239,68,68],[59,130,246],[245,158,11],[16,185,129]];
+  HELPLINES.forEach((h, i) => {
+    const [r,g,b] = hlColors[i];
+    doc.setFillColor(r,g,b);
+    doc.circle(M+5, y+4, 3, 'F');
+    doc.setTextColor(30,30,60);
+    doc.setFontSize(10); doc.setFont('helvetica', 'bold');
+    doc.text(`${h.name}`, M+12, y+6);
+    doc.setTextColor(r,g,b);
+    doc.setFontSize(14); doc.setFont('helvetica', 'bold');
+    doc.text(h.number, M+90, y+6);
+    doc.setTextColor(100,110,140);
+    doc.setFontSize(8); doc.setFont('helvetica', 'normal');
+    doc.text(h.desc, M+12, y+12);
+    y += 18;
+  });
+
+  // Disclaimer
+  y += 4;
+  doc.setFillColor(255, 248, 240);
+  doc.roundedRect(M, y, W-M*2, 18, 2, 2, 'F');
+  doc.setTextColor(160, 80, 20);
+  doc.setFontSize(8); doc.setFont('helvetica', 'italic');
+  const disclaimer = 'DISCLAIMER: This report is generated by TruthGuard and provides AI-assisted guidance only. It does not constitute legal advice. Always consult a qualified legal professional for your specific situation.';
+  const lines = doc.splitTextToSize(disclaimer, W-M*2-10);
+  doc.text(lines, M+5, y+7);
+
+  // Footer
+  doc.setFillColor(232, 100, 58);
+  doc.rect(0, 287, W, 10, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(8); doc.setFont('helvetica', 'normal');
+  doc.text('TruthGuard FIR Assistance · truthguard.app · Call 112 for emergencies', M, 293);
+
+  const filename = `TruthGuard_FIR_Report_${state.profile.name ? state.profile.name.replace(/\s+/g,'_') + '_' : ''}${new Date().toISOString().slice(0,10)}.pdf`;
+  doc.save(filename);
+  showToast('✓ PDF downloaded!', 'success');
+}
+
+// ═══════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function shareResult() {
+  if (navigator.share) {
+    navigator.share({ title: 'TruthGuard FIR Assistance', text: 'Find your nearest police station instantly', url: window.location.href });
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    showToast('✓ Link copied to clipboard', 'success');
+  }
+}
+
+function clearData() {
+  if (confirm('Clear all your saved data from this session?')) {
+    state = { step: 1, consent: false, profile: {}, location: null, nearestStations: [] };
+    document.getElementById('cb1').checked = false;
+    document.getElementById('cb2').checked = false;
+    showToast('✓ Data cleared', 'success');
+    goStep(1);
+  }
+}
+</script>
+
+</body>
+</html>

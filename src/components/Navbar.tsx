@@ -31,16 +31,14 @@ export default function Navbar() {
 
     const links = [
         { name: t('home'), href: "/" },
-        { name: t('fir_report'), href: "/fir-report" },
+        { name: t('fir_report'), href: "/fir-report-assistance.html" },
         { name: t('dashboard'), href: "/dashboard" },
         { name: t('deepfake'), href: "/lab" },
+        { name: t('chatbot'), href: "/chat" },
         { name: t('upgrade'), href: "/payment" },
     ];
 
     if (!mounted) return null;
-    
-    // Hide navbar on FIR page
-    if (pathname === "/fir-report") return null;
 
     return (
         <nav className="fixed top-0 left-0 right-0 z-[200] px-6 md:px-12 py-4 flex items-center justify-between bg-[rgba(8,11,26,0.75)] backdrop-blur-[28px] border-b border-[var(--border-gold)]">
