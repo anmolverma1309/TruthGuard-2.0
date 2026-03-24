@@ -28,10 +28,10 @@ This project analyzes text using AI and provides a **credibility score** to help
 
 ## 🛠 Tech Stack
 
-* **Frontend:** React 19, Next.js 16, TypeScript, Tailwind CSS
-* **Backend:** Next.js API Routes
-* **AI:** OpenRouter API (Multi-model support)
-* **Deployment:** Vercel
+* **Frontend:** React 19, Next.js 16, TypeScript, Tailwind CSS.
+* **Backend:** Next.js API Routes.
+* **AI:** OpenRouter API (Multi-model support).
+* **Deployment:** Vercel.
 
 ---
 
