@@ -11,12 +11,41 @@ const isValidApiKey = (key: string | undefined) => {
   return true;
 };
 
+// Simple in-memory rate limiter based on IP
+const rateLimitCache = new Map<string, { count: number, resetTime: number }>();
+
+// Simple in-memory results cache for duplicate queries
+const queryCache = new Map<string, any>();
+
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    const now = Date.now();
+    const rateRecord = rateLimitCache.get(ip);
+    
+    if (rateRecord) {
+      if (now > rateRecord.resetTime) {
+        rateLimitCache.set(ip, { count: 1, resetTime: now + 60000 }); // 1 min window
+      } else if (rateRecord.count >= 10) {
+        return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429, headers: { "X-RateLimit-Limit": "10", "X-RateLimit-Remaining": "0" } });
+      } else {
+        rateLimitCache.set(ip, { count: rateRecord.count + 1, resetTime: rateRecord.resetTime });
+      }
+    } else {
+      rateLimitCache.set(ip, { count: 1, resetTime: now + 60000 });
+    }
+
     const { input } = await req.json();
 
     if (!input || input.trim() === "") {
       return NextResponse.json({ error: "Missing or empty text input." }, { status: 400 });
+    }
+    
+    // Strip simple HTML tags to sanitize
+    const sanitizedInput = input.replace(/<\/?[^>]+(>|$)/g, "");
+    
+    if (sanitizedInput.length > 2000) {
+      return NextResponse.json({ error: "Input too long. Max 2000 characters." }, { status: 400 });
     }
 
     const hasValidApiKey = isValidApiKey(OPENROUTER_API_KEY);
@@ -97,11 +126,14 @@ ${input}
 """`;
 
 
+    const cacheKey = input.trim().toLowerCase();
+    if (queryCache.has(cacheKey)) {
+      console.log(`Cache hit for query: "${cacheKey.substring(0, 20)}..."`);
+      return NextResponse.json(queryCache.get(cacheKey));
+    }
+
     const models = [
-      "meta-llama/llama-3.1-8b-instruct",
-      "mistralai/mistral-7b-instruct",
-      "openai/gpt-3.5-turbo",
-      "gryphe/mythomax-l2-13b"
+      "meta-llama/llama-3.1-8b-instruct"
     ];
 
     const backupKey = process.env.BACKUP_API_KEY?.trim();
@@ -297,7 +329,7 @@ ${input}
     const currentTime = new Date().toISOString().split("T")[0];
     const disclaimer = `Report Generated: ${currentTime}. Fact Integrity: ${statusCategory}. Basis: ${type}. Scoring follows strict production guidelines. Subjective claims remain neutral.`;
 
-    return NextResponse.json({
+    const responseBody = {
       score,
       claim: aiResult.claim || (input.length > 80 ? input.substring(0, 80) + "..." : input),
       status: statusCategory,
@@ -305,7 +337,12 @@ ${input}
       sources,
       disclaimer,
       aiDetection: aiResult
-    });
+    };
+
+    // Store in cache for 1 hour (conceptually, we just put it in the Map without expiry logic here for brevity)
+    queryCache.set(cacheKey, responseBody);
+
+    return NextResponse.json(responseBody);
 
   } catch (error) {
     console.error("Server Error parsing request:", error);

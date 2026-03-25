@@ -14,11 +14,9 @@ export interface DeepfakeResult {
  * In production, this would call a Python FastAPI backend or an ONNX model.
  */
 export async function detectDeepfake(file: File): Promise<DeepfakeResult> {
-    // Artificial delay to simulate neural processing
-    await new Promise(resolve => setTimeout(resolve, 2500));
-
-    // Simulation logic based on file name or size for predictable testing
-    const luck = Math.random() * 100;
+    // Deterministic simulation logic based on file name or size for predictable testing
+    // Instead of Math.random(), we use the file size to generate a consistent score
+    const luck = (file.size % 100);
     
     let verdict: 'REAL' | 'FAKE' | 'SUSPICIOUS';
     let signals: string[] = [];

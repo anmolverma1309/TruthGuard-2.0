@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShieldAlert, Moon, Sun, User } from "lucide-react";
+import { ShieldAlert, Moon, Sun, User, Menu, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import FlagIcon from "./FlagIcon";
@@ -15,6 +15,7 @@ export default function Navbar() {
     const { locale, setLocale, t } = useLanguage();
     const [mounted, setMounted] = useState(false);
     const [showLang, setShowLang] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         setMounted(true);
@@ -31,7 +32,7 @@ export default function Navbar() {
 
     const links = [
         { name: t('home'), href: "/" },
-        { name: t('fir_report'), href: "/fir-report-assistance.html" },
+        { name: t('fir_report'), href: "/fir-report" },
         { name: t('dashboard'), href: "/dashboard" },
         { name: t('deepfake'), href: "/lab" },
         { name: t('chatbot'), href: "/chat" },
@@ -61,14 +62,14 @@ export default function Navbar() {
                         const isActive = pathname === link.href || (pathname.startsWith(link.href) && link.href !== "/");
                         return (
                             <li key={link.name}>
-                                <Link
+                                <a
                                     href={link.href}
                                     className={`font-serif italic text-xl tracking-wider transition-colors duration-200 ${
                                         isActive ? "text-[var(--gold2)]" : "text-[var(--text-mid)] hover:text-[var(--gold2)]"
                                     }`}
                                 >
                                     {link.name}
-                                </Link>
+                                </a>
                             </li>
                         );
                     })}
@@ -123,7 +124,46 @@ export default function Navbar() {
                 >
                     Agent Access
                 </Link>
+
+                {/* Mobile Menu Toggle */}
+                <button 
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    className="md:hidden p-2 text-[var(--gold2)]"
+                >
+                    {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
             </div>
+
+            {/* Mobile Nav Overlay */}
+            {mobileMenuOpen && (
+                <div className="md:hidden absolute top-[72px] left-0 w-full bg-[rgba(8,11,26,0.95)] backdrop-blur-xl border-b border-[var(--border-gold)] z-[190] p-6 flex flex-col gap-6 animate-in slide-in-from-top-4">
+                    <ul className="flex flex-col gap-4 list-none mb-0">
+                        {links.map((link) => {
+                            const isActive = pathname === link.href || (pathname.startsWith(link.href) && link.href !== "/");
+                            return (
+                                <li key={link.name}>
+                                    <a
+                                        href={link.href}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className={`font-serif italic text-xl tracking-wider transition-colors duration-200 block ${
+                                            isActive ? "text-[var(--gold2)]" : "text-[var(--text-mid)] hover:text-[var(--gold2)]"
+                                        }`}
+                                    >
+                                        {link.name}
+                                    </a>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                    <Link 
+                        href="/auth" 
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="nav-cta text-center mt-2 w-full"
+                    >
+                        Agent Access
+                    </Link>
+                </div>
+            )}
         </nav>
     );
 }

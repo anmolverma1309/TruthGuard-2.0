@@ -34,20 +34,20 @@ export default function Home() {
         <div className="hero-ring hero-ring3" />
 
         <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center">
-          <div className="hero-badge reveal">— {t('truth')} {t('guard')} —</div>
-          <div className="hero-old reveal d1">Veritas · Claritas · Fides</div>
+          <div className="hero-badge reveal font-mono">— TRUTHGUARD-X —</div>
+          <div className="hero-old reveal d1 font-serif">Veritas · Claritas · Fides</div>
           
-          <h1 className="hero-h1 reveal d2 mb-8">
-            <span className="t1">{t('truth')}</span>
-            <span className="t2">{t('guard')}</span>
+          <h1 className="hero-h1 reveal d2 mb-8 font-serif">
+            <span className="t1 block text-6xl md:text-8xl mb-2">The Truth</span>
+            <span className="t2 block text-5xl md:text-7xl">As It Should Be.</span>
           </h1>
 
           <p className="hero-tag2 reveal d3 mb-6 uppercase tracking-[6px] text-xs font-serif text-[var(--rose2)] opacity-70">
             {t('bharat_edition')}
           </p>
 
-          <p className="hero-sub reveal d4 mb-14 max-w-2xl mx-auto text-[15px] italic leading-[1.9] text-[var(--text-mid)]">
-            {t('hero_desc')}
+          <p className="hero-sub reveal d4 mb-14 max-w-2xl mx-auto text-lg leading-[1.9] text-[var(--text-mid)] font-light">
+            Premium AI-powered misinformation detection for the Indian market.
           </p>
 
           <div className="hero-strip reveal d4 flex flex-col sm:flex-row gap-12 sm:gap-20 bg-[rgba(13,17,48,0.55)] border-y border-[var(--border-gold)] py-8 px-14">
@@ -66,11 +66,8 @@ export default function Home() {
           </div>
 
           <div className="mt-16 reveal d4 flex flex-wrap justify-center gap-8">
-            <Link href="/dashboard" className="mission-cta">
-              {t('explore')} <ArrowRight className="ml-2 w-4 h-4" />
-            </Link>
-            <Link href="/lab" className="px-10 py-4 border border-[var(--border-gold)] text-[var(--gold2)] font-serif italic text-sm hover:bg-[var(--gold-faint)] transition-all">
-              {t('get_started')}
+            <Link href="/dashboard" className="mission-cta bg-[var(--gold2)] text-[var(--bg)] font-serif italic text-lg shadow-[0_0_30px_rgba(255,215,0,0.3)] hover:shadow-[0_0_50px_rgba(255,215,0,0.6)]">
+              Enter Analysis Hub <ArrowRight className="ml-3 w-5 h-5" />
             </Link>
           </div>
         </div>

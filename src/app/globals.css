@@ -5,41 +5,42 @@ html {
 }
 
 :root {
-  --bg:        #080B1A;
-  --bg2:       #0D1130;
-  --bg3:       #111840;
-  --gold:      #D4A843;
-  --gold2:     #F0C060;
-  --gold-dim:  rgba(212,168,67,0.15);
-  --gold-faint:rgba(212,168,67,0.07);
-  --rose:      #C0365A;
-  --rose2:     #E85080;
-  --rose-dim:  rgba(192,54,90,0.18);
-  --teal:      #1FCFCF;
-  --teal2:     #5EE8E8;
-  --teal-dim:  rgba(31,207,207,0.14);
-  --green:     #3FD97A;
-  --amber:     #FFAA30;
-  --red:       #E84060;
-  --text:      #E8E0F0;
-  --text-mid:  #A89EC0;
-  --text-dim:  #6860A0;
+  --bg:        #0c102f;
+  --bg2:       #151938;
+  --bg3:       #2e3253;
+  --gold:      #e9c400;
+  --gold2:     #FFD700;
+  --gold-dim:  rgba(255, 215, 0, 0.15);
+  --gold-faint:rgba(255, 215, 0, 0.07);
+  --rose:      #643b5e;
+  --rose2:     #e0acd5;
+  --rose-dim:  rgba(224, 172, 213, 0.18);
+  --teal:      #00dbe8;
+  --teal2:     #00f1ff;
+  --teal-dim:  rgba(0, 241, 255, 0.14);
+  --green:     #00dbe8;
+  --amber:     #e9c400;
+  --red:       #ffb4ab;
+  --text:      #dfe0ff;
+  --text-mid:  #d0c6ab;
+  --text-dim:  #999077;
 
   /* glass surfaces */
-  --glass-gold: rgba(212,168,67,0.08);
-  --glass-rose: rgba(192,54,90,0.08);
-  --glass-teal: rgba(31,207,207,0.07);
-  --glass-base: rgba(13,17,48,0.60);
-  --glass-dark: rgba(8,11,26,0.70);
+  --glass-gold: rgba(255, 215, 0, 0.08);
+  --glass-rose: rgba(224, 172, 213, 0.08);
+  --glass-teal: rgba(0, 241, 255, 0.07);
+  --glass-base: rgba(21, 25, 56, 0.60);
+  --glass-dark: rgba(12, 16, 47, 0.70);
 
-  --border-gold:  rgba(212,168,67,0.30);
-  --border-gold2: rgba(240,192,96,0.55);
-  --border-rose:  rgba(232,80,128,0.30);
-  --border-teal:  rgba(94,232,232,0.25);
-  --border-dim:   rgba(168,158,192,0.12);
+  --border-gold:  rgba(255, 215, 0, 0.30);
+  --border-gold2: rgba(255, 215, 0, 0.55);
+  --border-rose:  rgba(224, 172, 213, 0.30);
+  --border-teal:  rgba(0, 241, 255, 0.25);
+  --border-dim:   rgba(153, 144, 119, 0.15);
 
-  --serif: 'Bell MT', 'Times New Roman', Georgia, serif;
-  --old: 'Old English Text MT', 'UnifrakturMaguntia', fantasy;
+  --serif: var(--font-noto-serif), 'Times New Roman', Georgia, serif;
+  --old: var(--font-noto-serif), fantasy;
+  --mono: var(--font-space-grotesk), monospace;
 }
 
 .light {
@@ -124,6 +125,7 @@ html {
   
   --font-serif: var(--serif);
   --font-old: var(--old);
+  --font-mono: var(--mono);
 
   /* Neo Compatibility Mapping */
   --color-neo-bg: var(--bg);
@@ -156,10 +158,10 @@ body {
 .bg-mesh {
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(212,168,67,0.10) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 50% at 80% 75%, rgba(192,54,90,0.12) 0%, transparent 50%),
-    radial-gradient(ellipse 70% 70% at 55% 45%, rgba(31,207,207,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 100% 80% at 50% 50%, rgba(13,17,48,0.95) 30%, var(--bg) 100%);
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(255, 215, 0, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 80% 75%, rgba(224, 172, 213, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 70% at 55% 45%, rgba(0, 241, 255, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 80% at 50% 50%, rgba(12, 16, 47, 0.95) 30%, var(--bg) 100%);
   animation: meshDrift 18s ease-in-out infinite alternate;
 }
 
