@@ -45,3 +45,4 @@ Users have a "bird's-eye view" of global threat levels.
 *   **General Consumers:** People looking to verify WhatsApp forwards and social media claims.
 *   **Journalists & Fact-Checkers:** Professionals requiring a fast, highly accurate first-pass verification tool.
 *   **Law Enforcement & Civic Bodies:** Authorities needing standardized, verifiable documentation (FIR Reports) of digital misinformation campaigns.
+   
