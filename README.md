@@ -6,7 +6,7 @@ This project analyzes text using AI and provides a **credibility score** to help
 TruthGuard-X is a Next.js 16 (App Router) project built with React 19, Tailwind CSS v4, and Framer Motion. It calls the OpenRouter and Groq APIs to perform fact-checking and deepfake analysis for the Indian market ("Bharat Edition").
 
 ---
-
+ 
 
 
 ## 🚀 Features
