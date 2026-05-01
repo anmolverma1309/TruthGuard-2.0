@@ -1,3 +1,5 @@
+# AUTO-UPDATE: version = 1
+# AUTO-UPDATE: last_modified = 2026-05-01
 # 🧠 AI Misinformation Detector
 
 An AI-powered tool that detects **fake news and misinformation in real time**.
